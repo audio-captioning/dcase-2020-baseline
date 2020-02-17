@@ -22,3 +22,96 @@ Clotho data) can also be found
 [here](https://github.com/audio-captioning/clotho-dataloader).  
 
 This repository is maintained by [K. Drossos](https://github.com/dr-costas). 
+
+
+## Table of contents
+
+  1. [Setting up the code](#setting-up-the-code)
+  2. [Preparing the data](#preparing-the-data)
+  3. [Use the baseline system](#use-the-baseline-system)
+  5. [Explanation of settings](#explanation-of-settings)
+  
+## Setting up the code
+
+To start using the audio captioning DCASE 2020 baseline system, firstly you
+have to set-up the code. To set-up the code, you have to do the following: 
+
+  1. Clone this repository.
+  2. Use either pip or conda to install dependencies
+  
+Use the following command to clone this repository at your terminal:
+
+````shell script
+$ git clone git@github.com:audio-captioning/dacse-2020-baseline.git
+````
+
+The above command will create the directory `dacse-2020-baseline` and populate
+it with the contents of this repository. The `dacse-2020-baseline` directory 
+will be called root directory for the rest of this README file. 
+  
+For installing the dependencies, there are two ways. You can either use conda or
+pip. 
+
+### Using conda for installing dependencies
+
+To use conda, you can issue the following command at your terminal (when you are 
+in the root directory):
+
+````shell script
+$ conda create --name audio-captioning-baseline --file requirements_conda.yaml
+````  
+
+The above command will create a new environment called `audio-captioning-baseline`, which 
+will have set-up all the dependencies for the audio captioning DCASE 2020 baseline.  To 
+activate the `audio-captioning-baseline` environment, you can issue the following command"
+
+````shell script
+$ conda activate audio-captioning-baseline
+```` 
+
+Now, you are ready to proceed to the following steps. 
+
+### Using pip for installing dependencies
+
+If you do not use anaconda/conda, you can use the default Python package manager to install
+the dependencies of the audio captioning DCASE 2020 baseline. To do so, you have to issue
+the following command at the terminal (when you are inside the root directory): 
+
+````shell script
+$ pip install -r requirements_pip.txt
+````
+
+The above command will install the required packages using pip. Now you are ready to go
+to the following steps. 
+
+## Preparing the data
+
+After setting-up the code for the audio captioning DCASE 2020 baseline system, you have to
+obtain the Clotho dataset. Clotho dataset is freely available online at the Zenodo platform. 
+You can find Clotho at
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3490684.svg)](https://doi.org/10.5281/zenodo.3490684)
+ 
+You should download all `.7z` files and the `.csv` files with the captions. That is, you have
+do download the following files from Zenodo: 
+
+  1. `clotho_audio_development.7z`  
+  2. `clotho_audio_evaluation.7z`  
+  3. `clotho_captions_development.csv`  
+  4. `clotho_captions_evaluation.csv`
+  
+After downloading the files, you should place them in the `data` directory, in your root directory.   
+
+
+### Getting the data from Zenodo
+
+### Feature extraction
+
+### Data set-up for experiments
+
+## Use the baseline system
+
+### Conduct an experiment
+
+### Modify the hyper-parameters
+
+## Explanation of settings 
