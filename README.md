@@ -20,3 +20,5 @@ Finally, code for handling the Clotho data (i.e. extracted features and
 one-hot encoded words) for PyTorch library (i.e. PyTorch DataLoader for
 Clotho data) can also be found
 [here](https://github.com/audio-captioning/clotho-dataloader).  
+
+This repository is maintained by [K. Drossos](https://github.com/dr-costas). 
