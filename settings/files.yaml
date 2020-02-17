@@ -1,0 +1,16 @@
+# ---------------------------------
+# Settings for file structure.
+#
+# author: Konstantinos Drossos
+# affiliation: Tampere University
+# ---------------------------------
+root_dir: 'data'
+dataset_dir: ''
+baseline_data_dir: ''
+characters_list_file_name: 'characters_list.p'
+words_list_file_name: 'words_list.p'
+split_dirs:
+  - 'training'
+  - 'validation'
+  - 'testing'
+# EOF
