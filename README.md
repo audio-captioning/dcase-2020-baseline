@@ -101,8 +101,8 @@ You can find Clotho at
 You should download all `.7z` files and the `.csv` files with the captions. That is, you have
 do download the following files from Zenodo: 
 
-  1. `clotho_audio_development.7z`  
-  2. `clotho_audio_evaluation.7z`  
+  1. `clotho_audio_development.7z`
+  2. `clotho_audio_evaluation.7z`
   3. `clotho_captions_development.csv`  
   4. `clotho_captions_evaluation.csv`
   
@@ -114,8 +114,9 @@ Before starting the feature extraction, you have first to expand the `7z` files.
 options on how to do this. We do not want to promote different software and/or packages, so you 
 can just search on Google about how to expand `7zip` files at your operating system. 
 
-After you expand the `7z` files, you should have two directories created. The first is ### and the
-second is ###.   
+After you expand the `7z` files, you should have two directories created. The first is 
+`development` and it will be created by teh `clotho_audio_development.7z` file. The second
+is evaluation, and it will be created by the `clotho_audio_evaluation.7z` file.  
 
 ### Data set-up for experiments
 
