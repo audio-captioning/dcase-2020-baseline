@@ -116,7 +116,18 @@ can just search on Google about how to expand `7zip` files at your operating sys
 
 After you expand the `7z` files, you should have two directories created. The first is 
 `development` and it will be created by teh `clotho_audio_development.7z` file. The second
-is evaluation, and it will be created by the `clotho_audio_evaluation.7z` file.  
+is evaluation, and it will be created by the `clotho_audio_evaluation.7z` file. Finally, you should
+have the following files and directories at your `root/data` directory: 
+
+  1. `development` directory
+  2. `evaluation` directory
+  3. `clotho_captions_development.csv` file  
+  4. `clotho_captions_evaluation.csv` file
+  
+The `development` directory contains 2163 audio files and the `evaluation` directory 1045 audio
+files. 
+
+Now, you can run the code 
 
 ### Data set-up for experiments
 
