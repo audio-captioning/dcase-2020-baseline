@@ -22,7 +22,8 @@ __all__ = ['get_amount_of_file_in_dir', 'get_annotations_files',
            'create_lists_and_frequencies']
 
 
-def get_amount_of_file_in_dir(the_dir: Path) -> int:
+def get_amount_of_file_in_dir(the_dir: Path)\
+        -> int:
     """Counts the amount of files in a directory.
 
     :param the_dir: Directory.
@@ -37,11 +38,14 @@ def get_amount_of_file_in_dir(the_dir: Path) -> int:
     return next(counter)
 
 
-def check_data_for_split(dir_audio: Path, dir_data: Path, dir_root: Path,
+def check_data_for_split(dir_audio: Path,
+                         dir_data: Path,
+                         dir_root: Path,
                          csv_split: MutableSequence[MutableMapping[str, str]],
                          settings_ann: MutableMapping[str, Any],
                          settings_audio: MutableMapping[str, Any],
-                         settings_cntr: MutableMapping[str, Any]) -> None:
+                         settings_cntr: MutableMapping[str, Any])\
+        -> None:
     """Goes through all audio files and checks the created data.
 
     Gets each audio file and checks if there are associated data. If there are,\
@@ -64,8 +68,10 @@ def check_data_for_split(dir_audio: Path, dir_data: Path, dir_root: Path,
     :type settings_cntr: dict
     """
     # Load the words and characters lists
-    words_list = load_pickle_file(dir_root.joinpath(settings_cntr['words_list_file_name']))
-    chars_list = load_pickle_file(dir_root.joinpath(settings_cntr['characters_list_file_name']))
+    words_list = load_pickle_file(dir_root.joinpath(
+        settings_cntr['words_list_file_name']))
+    chars_list = load_pickle_file(dir_root.joinpath(
+        settings_cntr['characters_list_file_name']))
 
     for csv_entry in csv_split:
         # Get audio file name
@@ -73,8 +79,8 @@ def check_data_for_split(dir_audio: Path, dir_data: Path, dir_root: Path,
 
         # Check if the audio file existed originally
         if not dir_audio.joinpath(file_name_audio).exists():
-            raise FileExistsError('Audio file {f_name_audio} not exists in {d_audio}'.format(
-                f_name_audio=file_name_audio, d_audio=dir_audio))
+            raise FileExistsError(
+                f'Audio file {file_name_audio} not exists in {dir_audio}')
 
         # Flag for checking if there are data files for the audio file
         audio_has_data_files = False
@@ -98,32 +104,36 @@ def check_data_for_split(dir_audio: Path, dir_data: Path, dir_root: Path,
 
                 # Compare the lengths
                 if len(data_audio_rec_array) != len(data_audio_original):
-                    raise ValueError(
-                        'File {f_audio} was not saved successfully to the numpy '
-                        'object {f_np}.'.format(f_audio=file_name_audio, f_np=data_file))
+                    raise ValueError(f'File {file_name_audio} was not saved '
+                                     f'successfully to the numpy object {data_file}.')
 
                 # Check all elements, one to one
                 if not all([data_audio_original[i] == data_audio_rec_array[i]
                             for i in range(len(data_audio_original))]):
-                    raise ValueError('Numpy object {} has wrong audio data.'.format(data_file))
+                    raise ValueError(f'Numpy object {data_file} has wrong audio '
+                                     f'data.')
 
                 # Get the original caption
                 caption_index = data_array['caption_ind'].item()
 
                 # Clean it to remove any spaces before punctuation.
                 original_caption = clean_sentence(
-                    sentence=csv_entry[settings_ann['captions_fields_prefix'].format(caption_index + 1)],
-                    keep_case=True, remove_punctuation=False,
+                    sentence=csv_entry[settings_ann['captions_fields_prefix'].format(
+                        caption_index + 1)],
+                    keep_case=True,
+                    remove_punctuation=False,
                     remove_specials=not settings_ann['use_special_tokens'])
 
                 # Check with the file caption
                 caption_data_array = clean_sentence(
-                    sentence=data_array['caption'].item(), keep_case=True,
+                    sentence=data_array['caption'].item(),
+                    keep_case=True,
                     remove_punctuation=False,
                     remove_specials=not settings_ann['use_special_tokens'])
 
                 if not original_caption == caption_data_array:
-                    raise ValueError('Numpy object {} has wrong caption.'.format(data_file))
+                    raise ValueError(f'Numpy object {data_file} has wrong '
+                                     f'caption.')
 
                 # Since caption in the file is OK, we can use it instead of
                 # the original, because it already has the special tokens.
@@ -138,10 +148,12 @@ def check_data_for_split(dir_audio: Path, dir_data: Path, dir_root: Path,
                 caption_form_words = ' '.join([words_list[i] for i in words_indices])
 
                 if not caption_data_array == caption_form_words:
-                    raise ValueError('Numpy object {} has wrong words indices.'.format(data_file))
+                    raise ValueError(f'Numpy object {data_file} has wrong words '
+                                     f'indices.')
 
                 # Check with the indices of characters
-                caption_from_chars = ''.join([chars_list[i] for i in data_array['chars_ind'].item()])
+                caption_from_chars = ''.join([
+                    chars_list[i] for i in data_array['chars_ind'].item()])
 
                 caption_data_array = clean_sentence(
                     sentence=data_array['caption'].item(),
@@ -150,12 +162,12 @@ def check_data_for_split(dir_audio: Path, dir_data: Path, dir_root: Path,
                     remove_specials=not settings_ann['use_special_tokens'])
 
                 if not caption_data_array == caption_from_chars:
-                    raise ValueError('Numpy object {} has wrong characters '
-                                     'indices.'.format(data_file))
+                    raise ValueError(f'Numpy object {data_file} has wrong '
+                                     f'characters indices.')
 
         if not audio_has_data_files:
-            raise FileExistsError('Audio file {} has no associated data.'.format(
-                file_name_audio))
+            raise FileExistsError(f'Audio file {file_name_audio} has '
+                                  f'no associated data.')
 
 
 def create_lists_and_frequencies(captions: MutableSequence[str],
@@ -182,17 +194,18 @@ def create_lists_and_frequencies(captions: MutableSequence[str],
         use_unique=settings_ann['use_unique_words_per_caption'],
         keep_case=settings_ann['keep_case'],
         remove_punctuation=settings_ann['remove_punctuation_words'],
-        remove_specials=not settings_ann['use_special_tokens']
-    )
+        remove_specials=not settings_ann['use_special_tokens'])
 
     # Get words and frequencies
-    words_list, frequencies_words = list(counter_words.keys()), list(counter_words.values())
+    words_list, frequencies_words = list(counter_words.keys()), \
+                                    list(counter_words.values())
 
     # Get characters and frequencies
     cleaned_captions = [clean_sentence(
         sentence, keep_case=settings_ann['keep_case'],
         remove_punctuation=settings_ann['remove_punctuation_chars'],
-        remove_specials=True) for sentence in captions]
+        remove_specials=True)
+        for sentence in captions]
 
     characters_all = list(chain.from_iterable(cleaned_captions))
     counter_characters = Counter(characters_all)
@@ -202,7 +215,8 @@ def create_lists_and_frequencies(captions: MutableSequence[str],
         counter_characters.update(['<sos>'] * len(cleaned_captions))
         counter_characters.update(['<eos>'] * len(cleaned_captions))
 
-    chars_list, frequencies_chars = list(counter_characters.keys()), list(counter_characters.values())
+    chars_list, frequencies_chars = list(counter_characters.keys()), \
+                                    list(counter_characters.values())
 
     # Save to disk
     obj_list = [words_list, frequencies_words, chars_list, frequencies_chars]
@@ -210,8 +224,7 @@ def create_lists_and_frequencies(captions: MutableSequence[str],
         settings_cntr['words_list_file_name'],
         settings_cntr['words_counter_file_name'],
         settings_cntr['characters_list_file_name'],
-        settings_cntr['characters_frequencies_file_name']
-    ]
+        settings_cntr['characters_frequencies_file_name']]
 
     [dump_pickle_file(obj=obj, file_name=dir_root.joinpath(obj_f_name))
      for obj, obj_f_name in zip(obj_list, obj_f_names)]
@@ -219,11 +232,16 @@ def create_lists_and_frequencies(captions: MutableSequence[str],
     return words_list, chars_list
 
 
-def create_split_data(csv_split: MutableSequence[MutableMapping[str, str]], dir_split: Path,
-                      dir_audio: Path, dir_root: Path, words_list: MutableSequence[str],
-                      chars_list: MutableSequence[str], settings_ann: MutableMapping[str, Any],
+def create_split_data(csv_split: MutableSequence[MutableMapping[str, str]],
+                      dir_split: Path,
+                      dir_audio: Path,
+                      dir_root: Path,
+                      words_list: MutableSequence[str],
+                      chars_list: MutableSequence[str],
+                      settings_ann: MutableMapping[str, Any],
                       settings_audio: MutableMapping[str, Any],
-                      settings_output: MutableMapping[str, Any]) -> None:
+                      settings_output: MutableMapping[str, Any])\
+        -> None:
     """Creates the data for the split.
 
     :param csv_split: Annotations of the split.
@@ -257,17 +275,18 @@ def create_split_data(csv_split: MutableSequence[MutableMapping[str, str]], dir_
 
         audio = load_audio_file(
             audio_file=str(dir_root.joinpath(dir_audio, file_name_audio)),
-            sr=int(settings_audio['sr']), mono=settings_audio['to_mono'])
+            sr=int(settings_audio['sr']),
+            mono=settings_audio['to_mono'])
 
         for caption_ind, caption_field in enumerate(captions_fields):
             caption = csv_entry[caption_field]
 
             words_caption = get_sentence_words(
-                caption, unique=settings_ann['use_unique_words_per_caption'],
+                caption,
+                unique=settings_ann['use_unique_words_per_caption'],
                 keep_case=settings_ann['keep_case'],
                 remove_punctuation=settings_ann['remove_punctuation_words'],
-                remove_specials=not settings_ann['use_special_tokens']
-            )
+                remove_specials=not settings_ann['use_special_tokens'])
 
             chars_caption = list(chain.from_iterable(
                 clean_sentence(
@@ -285,7 +304,7 @@ def create_split_data(csv_split: MutableSequence[MutableMapping[str, str]], dir_
             indices_words = [words_list.index(word) for word in words_caption]
             indices_chars = [chars_list.index(char) for char in chars_caption]
 
-            #   create the numpy object with all elements
+            # create the numpy object with all elements
             np_rec_array = np.rec.array(np.array(
                 (file_name_audio, audio, caption, caption_ind,
                  np.array(indices_words), np.array(indices_chars)),
@@ -294,21 +313,23 @@ def create_split_data(csv_split: MutableSequence[MutableMapping[str, str]], dir_
                     ('audio_data', np.dtype(object)),
                     ('caption', 'U{}'.format(len(caption))),
                     ('caption_ind', 'i4'),
-                    ('words_ind', np.dtype(object)),
+                    ('words_ind', np.dtype
+                    (object)),
                     ('chars_ind', np.dtype(object))
-                ]
-            ))
+                ]))
 
-            #   save the numpy object to disk
+            #  save the numpy object to disk
             dump_numpy_object(
                 np_obj=np_rec_array,
                 file_name=str(dir_split.joinpath(
                     settings_output['file_name_template'].format(
-                        audio_file_name=file_name_audio, caption_index=caption_ind))))
+                        audio_file_name=file_name_audio,
+                        caption_index=caption_ind))))
 
 
-def get_annotations_files(settings_ann: MutableMapping[str, Any], dir_ann: Path) -> \
-        Tuple[List[MutableMapping[str, Any]], List[MutableMapping[str, Any]]]:
+def get_annotations_files(settings_ann: MutableMapping[str, Any],
+                          dir_ann: Path)\
+        -> Tuple[List[MutableMapping[str, Any]], List[MutableMapping[str, Any]]]:
     """Reads, process (if necessary), and returns tha annotations files.
 
     :param settings_ann: Settings to be used.
@@ -331,12 +352,15 @@ def get_annotations_files(settings_ann: MutableMapping[str, Any], dir_ann: Path)
     for csv_entry in chain(csv_development, csv_evaluation):
         # Clean sentence to remove any spaces before punctuations.
 
-        captions = [clean_sentence(csv_entry.get(caption_field), keep_case=True,
-                                   remove_punctuation=False, remove_specials=False)
-                    for caption_field in caption_fields]
+        captions = [clean_sentence(
+            csv_entry.get(caption_field),
+            keep_case=True,
+            remove_punctuation=False,
+            remove_specials=False)
+            for caption_field in caption_fields]
 
         if settings_ann['use_special_tokens']:
-            captions = ['<SOS> {} <EOS>'.format(caption) for caption in captions]
+            captions = [f'<SOS> {caption} <EOS>' for caption in captions]
 
         [csv_entry.update({caption_field: caption})
          for caption_field, caption in zip(caption_fields, captions)]
