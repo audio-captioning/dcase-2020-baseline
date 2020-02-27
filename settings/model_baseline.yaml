@@ -1,9 +1,9 @@
-# ---------------------------------
+# =================================
 # Settings for the model.
 #
 # author: Konstantinos Drossos
 # affiliation: Tampere University
-# ---------------------------------
+# =================================
 encoder:
   input_dim_encoder: 64
   hidden_dim_encoder: 256
@@ -14,12 +14,4 @@ decoder:
   nb_classes:  # Empty, to be filled automatically.
   dropout_p_decoder: .25
   max_out_t_steps: 22
-root_dir: 'outputs'
-output:
-  models_dir: &model_dir 'models'
-  file_name: 'best_model_baseline__.pytorch'
-pre_trained_model:
-  use_pre_trained: Yes
-  model_dir: *model_dir
-  model_name: 'dcase_baseline_model.pytorch'
 # EOF
