@@ -2,11 +2,10 @@
 # -*- coding: utf-8 -*-
 
 from . import dataset
-from . import features
 from . import method
 
 __author__ = 'Konstantinos Drossos -- Tampere University'
 __docformat__ = 'reStructuredText'
-__all__ = ['dataset', 'features', 'method']
+__all__ = ['dataset', 'method']
 
 # EOF
