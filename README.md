@@ -96,7 +96,7 @@ obtain the Clotho dataset, place it to the proper directory, and do the feature 
 
 Clotho dataset is freely available online at the Zenodo platform. 
 You can find Clotho at
-<!--- [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3490684.svg)](https://doi.org/10.5281/zenodo.3490684)-->
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3490684.svg)](https://doi.org/10.5281/zenodo.3490684)
  
 You should download all `.7z` files and the `.csv` files with the captions. That is, you have
 do download the following files from Zenodo: 
