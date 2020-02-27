@@ -1,0 +1,32 @@
+# =================================
+# Settings for file structure.
+#
+# author: Konstantinos Drossos
+# affiliation: Tampere University
+# =================================
+root_dirs:
+  outputs: 'outputs'
+  data: 'data'
+dataset:
+  audio_dirs:
+    downloaded: 'clotho_audio_files'
+    output: 'data_splits'
+    development: 'development'
+    evaluation: 'evaluation'
+  annotations_dir: 'clotho_csv_files'
+  pickle_files_dir: 'pickles'
+  files:
+    np_file_name_template: 'clotho_file_{audio_file_name}_{caption_index}.npy'
+    words_list_file_name: 'words_list.p'
+    words_counter_file_name: 'words_frequencies.p'
+    characters_list_file_name: 'characters_list.p'
+    characters_frequencies_file_name: 'characters_frequencies.p'
+model:
+  model_dir: 'models'
+  checkpoint_model_name: 'dcase_model_baseline.pt'
+  pre_trained_model_name: 'dcase_model_pre_trained.pytorch'
+logging:
+  root_dir: 'outputs'
+  logger_dir: 'logging'
+  caption_logger_file: 'captions_baseline.txt'
+# EOF
