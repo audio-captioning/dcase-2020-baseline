@@ -18,19 +18,23 @@ def get_argument_parser():
     the_args = [
         # ---------------------------------
         [['--config-file', '-c'],
-         {'type': str, 'required': True,
+         {'type': str,
+          'default': 'main_settings',
           'help': 'The settings file (without extension).'}],
         # ---------------------------------
         [['--file-dir', '-d'],
-         {'type': str, 'default': 'settings',
+         {'type': str,
+          'default': 'settings',
           'help': 'Directory that holds the settings file (default: `settings`).'}],
         # ---------------------------------
         [['--file-ext', '-e'],
-         {'type': str, 'default': 'yaml',
+         {'type': str,
+          'default': 'yaml',
           'help': 'Extension of the settings file (default: `yaml`).'}],
         # ---------------------------------
         [['--verbose', '-v'],
-         {'default': False, 'action': 'store_true',
+         {'default': False,
+          'action': 'store_true',
           'help': 'Be verbose flag (default False).'}]]
 
     [arg_parser.add_argument(*i[0], **i[1]) for i in the_args]
