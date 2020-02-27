@@ -121,17 +121,20 @@ def create_dataset(settings_dataset: MutableMapping[str, Any],
                           f'files per audio: '
                           f'{nb_files_data / nb_files_audio}')
 
-        # Check the created lists of indices for words and characters.
-        inner_logger.info(f'Checking the {split_name} split')
-        check_data_for_split(
-            dir_audio=dir_downloaded_audio,
-            dir_data=Path(settings_audio_dirs['output'],
-                          settings_audio_dirs[f'{split_name}']),
-            dir_root=dir_root, csv_split=split_csv,
-            settings_ann=settings_dataset['annotations'],
-            settings_audio=settings_dataset['audio'],
-            settings_cntr=settings_dirs_and_files['dataset'])
-        inner_logger.info('Done')
+        if settings_dataset['workflow']['validate_dataset']:
+            # Check the created lists of indices for words and characters.
+            inner_logger.info(f'Checking the {split_name} split')
+            check_data_for_split(
+                dir_audio=dir_downloaded_audio,
+                dir_data=Path(settings_audio_dirs['output'],
+                              settings_audio_dirs[f'{split_name}']),
+                dir_root=dir_root, csv_split=split_csv,
+                settings_ann=settings_dataset['annotations'],
+                settings_audio=settings_dataset['audio'],
+                settings_cntr=settings_dirs_and_files['dataset'])
+            inner_logger.info('Done')
+        else:
+            inner_logger.info(f'Skipping validation of {split_name} split')
 
 
 def main():
