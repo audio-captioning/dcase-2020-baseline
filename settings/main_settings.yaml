@@ -12,8 +12,6 @@ workflow:
 # ---------------------------------
 dataset_creation_settings: !include dataset_creation.yaml
 # -----------------------------------
-feature_extraction: !include feature_extraction.yaml
-# -----------------------------------
 dnn_training_settings: !include method_baseline.yaml
 # -----------------------------------
 dirs_and_files: !include dirs_and_files.yaml
