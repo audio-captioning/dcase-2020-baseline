@@ -7,6 +7,7 @@
 root_dirs:
   outputs: 'outputs'
   data: 'data'
+# -----------------------------------
 dataset:
   audio_dirs:
     downloaded: 'clotho_audio_files'
@@ -21,10 +22,12 @@ dataset:
     words_counter_file_name: 'words_frequencies.p'
     characters_list_file_name: 'characters_list.p'
     characters_frequencies_file_name: 'characters_frequencies.p'
+# -----------------------------------
 model:
   model_dir: 'models'
   checkpoint_model_name: 'dcase_model_baseline.pt'
   pre_trained_model_name: 'dcase_model_pre_trained.pytorch'
+# -----------------------------------
 logging:
   logger_dir: 'logging'
   caption_logger_file: 'captions_baseline.txt'
