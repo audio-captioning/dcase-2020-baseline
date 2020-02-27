@@ -17,25 +17,11 @@ from tools.file_io import load_numpy_object, load_audio_file, \
 
 __author__ = 'Konstantinos Drossos -- Tampere University'
 __docformat__ = 'reStructuredText'
-__all__ = ['get_amount_of_file_in_dir', 'get_annotations_files',
-           'check_data_for_split', 'create_split_data',
-           'create_lists_and_frequencies']
-
-
-def get_amount_of_file_in_dir(the_dir: Path)\
-        -> int:
-    """Counts the amount of files in a directory.
-
-    :param the_dir: Directory.
-    :type the_dir: pathlib.Path
-    :return: Amount of files in directory.
-    :rtype: int
-    """
-    counter = count()
-
-    deque(zip(the_dir.iterdir(), counter))
-
-    return next(counter)
+__all__ = ['check_data_for_split',
+           'create_lists_and_frequencies',
+           'create_split_data',
+           'get_annotations_files',
+           'get_amount_of_file_in_dir']
 
 
 def check_data_for_split(dir_audio: Path,
@@ -44,7 +30,7 @@ def check_data_for_split(dir_audio: Path,
                          csv_split: MutableSequence[MutableMapping[str, str]],
                          settings_ann: MutableMapping[str, Any],
                          settings_audio: MutableMapping[str, Any],
-                         settings_cntr: MutableMapping[str, Any])\
+                         settings_cntr: MutableMapping[str, Any]) \
         -> None:
     """Goes through all audio files and checks the created data.
 
@@ -265,7 +251,7 @@ def create_split_data(csv_split: MutableSequence[MutableMapping[str, str]],
                       chars_list: MutableSequence[str],
                       settings_ann: MutableMapping[str, Any],
                       settings_audio: MutableMapping[str, Any],
-                      settings_output: MutableMapping[str, Any])\
+                      settings_output: MutableMapping[str, Any]) \
         -> None:
     """Creates the data for the split.
 
@@ -348,6 +334,22 @@ def create_split_data(csv_split: MutableSequence[MutableMapping[str, str]],
                     settings_output['files']['np_file_name_template'].format(
                         audio_file_name=file_name_audio,
                         caption_index=caption_ind)))
+
+
+def get_amount_of_file_in_dir(the_dir: Path) \
+        -> int:
+    """Counts the amount of files in a directory.
+
+    :param the_dir: Directory.
+    :type the_dir: pathlib.Path
+    :return: Amount of files in directory.
+    :rtype: int
+    """
+    counter = count()
+
+    deque(zip(the_dir.iterdir(), counter))
+
+    return next(counter)
 
 
 def get_annotations_files(settings_ann: MutableMapping[str, Any],
