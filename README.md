@@ -337,6 +337,8 @@ Finally, the `logging` entry has:
 
 ### Settings for the creation of the dataset
 
+The file `settings/daatset_creation.yaml` has: 
+
     workflow:
       create_dataset: Yes
       validate_dataset: Yes
@@ -356,8 +358,42 @@ Finally, the `logging` entry has:
       sr: 44100
       to_mono: Yes
       max_abs_value: 1.
+      
+The `workflow` block is to indicate the execution or not of the dataset creation and validation.
+That is:
 
+  * if the dataset will be created - `create_dataset`, and
+  * if the data for each split will be validated (this is a lengthy process) - `validate_dataset`
+  
+The `annotations` block holds the settings needed for accessing and processing the annotations
+(i.e. the csv files) of Clotho. That is: 
+
+  * the name of the file holding the annotations of the development split - `development_file`
+  * the name of the file holding the annotations of the evaluation split - `evaluation_file`
+  * the name of the column in the annotations file that has the file name
+  of the corresponding audio file - 'audio_file_column'
+  * the prefix of the column name of the columns (at the csv files) that have the
+  captions - `captions_fields_prefix`
+  * indication of the special tokens (i.e. `<sos>` and `<eos>`) will be used - `use_special_tokens`
+  * the amount of captions per each audio file - `nb_captions`
+  * indication if the letter case. i.e. keep capital letters as capitals (`Yes`) or turn them to small
+  case (`No`) will be kept - `keep_case`
+  * if the punctuation will be removed from the word tokens - `remove_punctuation_words`
+  * if the punctuation will be removed from the character tokens - `remove_punctuation_chars`
+  * take into account unique words per audio file when counting the frequency of
+  appearance of each word - `use_unique_words_per_caption`
+  * take into account unique characters per audio file when counting the frequency of
+  appearance of each character - `use_unique_chars_per_caption`
+  
+The `audio` block holds settings for processing the audio data: 
+
+  * the sampling frequency that the audio data will be resampled (if needed) to - `sr`
+  * indication if the audio files should be turned to mono - `to_mono`
+  * maximum absolute value for normalizing the audio data - `max_abs_value`
+  
 ### Settings for the baseline model
+
+The file `settings/model_baseline.yaml` holds the settings for the baseline DNN:
 
     encoder:
       input_dim_encoder: 64
@@ -369,8 +405,27 @@ Finally, the `logging` entry has:
       nb_classes:  # Empty, to be filled automatically.
       dropout_p_decoder: .25
       max_out_t_steps: 22
+      
+The `encoder` block has the settings for the encoder of the baseline DNN:
+
+  * the input dimensionality to the first layer of the encoder - `input_dim_encoder`
+  * the hidden output dimensionality of the first and second layers of the encoder -
+  `hidden_dim_encoder`
+  * the output dimensionality of the third layer of the encoder - `output_dim_encoder`
+  * the dropout probability for the encoder - `dropout_p_encoder`
+  
+Similarly, the `decoder` block holds the settings for the decoder of the baseline DNN: 
+
+  * the output dimensionality of the RNN of the decoder - `output_dim_h_decoder`
+  * the amount of classes for the classifier (it is filled automatically by the
+  baseline system) - `nb_classes`
+  * the dropout probability for the decoder - `dropout_p_decoder`
+  * the maximum output time-steps for the decoder - `max_out_t_steps`
 
 ### Settings for the baseline method
+
+The file `settings/method_baseline.yaml` holds the settings for the training and
+evaluation procedure of the baseline DNN: 
 
     model: !include model_baseline.yaml
     data:
@@ -393,3 +448,29 @@ Finally, the `logging` entry has:
       force_cpu: No
       text_output_every_nb_epochs: !!int 10
       nb_examples_to_sample: 100
+
+The `model` specifies the file where the settings of the baseline DNN are (i.e. the
+`settings/model_baseline.yaml` file). 
+
+The `data` block has the settings for handling the data at the training/evaluation processes:
+
+  * the name of the field of the numpy object that holds the input values - `input_field_name`
+  * the name of the field of the numpy object that holds the output/target values - `output_field_name`
+  * indication if the whole dataset should be loaded into the memory during training/evaluation
+  processes - `load_into_memory`
+  * the size of the batch - `batch_size`
+  * indication for shuffling the training data - `shuffle`
+  * the amount of workers that the PyTorch DataLoader will use - `num_workers`
+  * indication if the last (incomplete) batch will be used or not - `drop_last`
+  
+The `training` block holds settings for the training process: 
+
+  * the maximum amount of epochs - `nb_epochs`
+  * the amount of epochs for patience - `patience`
+  * the threshold at the loss for considering that the loss is the same or changed - `loss_thr`
+  * the settings for the optimizer (just the learning rate) - `optimizer`
+  * settings for clipping the gradient norm - `grad_norm`
+  * indication if the training should necessarily be on the CPU (e.g. for debugging) - `force_cpu`
+  * indication of every how many epochs there should be an output of predicted captions - `text_output_every_nb_epochs`
+  * how many examples to use for outputting the captions - `nb_examples_to_sample`
+  
