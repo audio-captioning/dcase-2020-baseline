@@ -9,6 +9,7 @@ encoder:
   hidden_dim_encoder: 256
   output_dim_encoder: 256
   dropout_p_encoder: .25
+# -----------------------------------
 decoder:
   output_dim_h_decoder: 256
   nb_classes:  # Empty, to be filled automatically.
