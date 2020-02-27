@@ -303,9 +303,9 @@ the data will be used as the root directory where the data are, e.g. the `data` 
 directory mentioned in section [setting up the data](#setting-up-the-data). 
 
 The `dataset` has the directory and file names used when creating and accessing the dataset
-files. The `dataset/audio` has the directory names that the:
+files. The `dataset/audio` has the directory names that:
 
-  * downloaded audio will be - `downloaded`
+  * the downloaded audio will be - `downloaded`
   * the dataset files (i.e. the input/output examples) will be - `output`
   * the name of the directory that will hold the development data - `development`
   * the name of the directory that will hold the evaluation data - `evaluation`
@@ -334,3 +334,62 @@ Finally, the `logging` entry has:
 
   * the directory where the logging files will be placed - `logger_dir`, 
   * and the base file name of the logging - `caption_logger_file`. 
+
+### Settings for the creation of the dataset
+
+    workflow:
+      create_dataset: Yes
+      validate_dataset: Yes
+    annotations:
+      development_file: 'clotho_captions_development.csv'
+      evaluation_file: 'clotho_captions_evaluation.csv'
+      audio_file_column: 'file_name'
+      captions_fields_prefix: 'caption_{}'
+      use_special_tokens: Yes
+      nb_captions: 5
+      keep_case: No
+      remove_punctuation_words: Yes
+      remove_punctuation_chars: Yes
+      use_unique_words_per_caption: No
+      use_unique_chars_per_caption: No
+    audio:
+      sr: 44100
+      to_mono: Yes
+      max_abs_value: 1.
+
+### Settings for the baseline model
+
+    encoder:
+      input_dim_encoder: 64
+      hidden_dim_encoder: 256
+      output_dim_encoder: 256
+      dropout_p_encoder: .25
+    decoder:
+      output_dim_h_decoder: 256
+      nb_classes:  # Empty, to be filled automatically.
+      dropout_p_decoder: .25
+      max_out_t_steps: 22
+
+### Settings for the baseline method
+
+    model: !include model_baseline.yaml
+    data:
+      input_field_name: 'features'
+      output_field_name: 'words_ind'
+      load_into_memory: No
+      batch_size: 16
+      shuffle: Yes
+      num_workers: 0
+      drop_last: Yes
+    training:
+      nb_epochs: 300
+      patience: 10
+      loss_thr: !!float 1e-4
+      optimizer:
+        lr: !!float 1e-4
+      grad_norm:
+        value: !!float 1.
+        norm: 2
+      force_cpu: No
+      text_output_every_nb_epochs: !!int 10
+      nb_examples_to_sample: 100
