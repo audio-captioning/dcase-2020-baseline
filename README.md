@@ -219,3 +219,118 @@ be released on Zenodo, on the following days. Stay tuned!
 ### Modify the hyper-parameters
 
 ## Explanation of settings 
+
+There are different settings for the baseline system, associated with the creation of the
+dataset, the data, the outputs of the baseline system, and (of course) the optimization of
+the baseline DNN. 
+
+All these settings can be found in the `settings` directory. This directory has (by default)
+the following files: 
+
+  1. `main_settings.yaml`
+  2. `dirs_and_files.yaml`
+  3. `dataset_creation.yaml`
+  4. `model_baseline.yaml`
+  5. `method_baseline.yaml`
+  
+The parameters in the above `.yaml` files are explained in the following sections.
+
+### Main settings
+
+In the `settings/main_settings.yaml` file, you can find the following settings: 
+
+    workflow:
+      dataset_creation: Yes
+      dnn_training: yes
+      captions_evaluation: yes
+    dataset_creation_settings: !include dataset_creation.yaml
+    dnn_training_settings: !include method_baseline.yaml
+    dirs_and_files: !include dirs_and_files.yaml
+
+The settings at the `workflow` block, correspond to the different processes that the baseline
+system can do; the creation of the dataset (`dataset_creation`), the optimization of the DNN
+(`dnn_training`), and the evaluation of captions (`captions_evaluation`). By indicating
+a `yes` or a `no`, you can switch on (with `yes`) or off (with `no`) the processes. For example,
+the 
+
+    workflow:
+          dataset_creation: no
+          dnn_training: yes
+          captions_evaluation: no
+          
+means that the baseline system will **not** create the dataset and will **not** evaluate captions,
+but it will do the optimization of the DNN. 
+
+The rest settings serve to indicate the files that hold the settings for each of the processes.
+For example, the `dataset_creation.yaml` file holds the settings for the dataset creation. An
+exception is the `dirs_and_files` field, which indicates which file holds the settings for inputs
+and outputs of the baseline system. 
+
+### Settings for directories and files
+
+The `settings/dirs_and_files.yaml` file, holds the following settings: 
+
+    root_dirs:
+      outputs: 'outputs'
+      data: 'data'
+    dataset:
+      audio_dirs:
+        downloaded: 'clotho_audio_files'
+        output: 'data_splits'
+        development: 'development'
+        evaluation: 'evaluation'
+      annotations_dir: 'clotho_csv_files'
+      pickle_files_dir: 'pickles'
+      files:
+        np_file_name_template: 'clotho_file_{audio_file_name}_{caption_index}.npy'
+        words_list_file_name: 'words_list.p'
+        words_counter_file_name: 'words_frequencies.p'
+        characters_list_file_name: 'characters_list.p'
+        characters_frequencies_file_name: 'characters_frequencies.p'
+    model:
+      model_dir: 'models'
+      checkpoint_model_name: 'dcase_model_baseline.pt'
+      pre_trained_model_name: 'dcase_model_pre_trained.pytorch'
+    logging:
+      logger_dir: 'logging'
+      caption_logger_file: 'captions_baseline.txt'
+      
+These are the necessary settings, to specify the input and output directories for the
+baseline system. Specifically, the `root_dirs` has the root directories for the outputs
+(`outputs`) and the data (`data`). The root directory of the outputs will be used in order
+to output the checkpoints of the baseline DNN and the logging files. The root directory for
+the data will be used as the root directory where the data are, e.g. the `data` (at `root/data`)
+directory mentioned in section [setting up the data](#setting-up-the-data). 
+
+The `dataset` has the directory and file names used when creating and accessing the dataset
+files. The `dataset/audio` has the directory names that the:
+
+  * downloaded audio will be - `downloaded`
+  * the dataset files (i.e. the input/output examples) will be - `output`
+  * the name of the directory that will hold the development data - `development`
+  * the name of the directory that will hold the evaluation data - `evaluation`
+  
+The `annotations_dir` and `pickle_files_dir` hold the names of the directories where the
+csv files will be (`annotations_dir`) and where the `pickle` files will be placed (`pickle_files_dir`).
+
+The `files` entry at the `dataset` block, has:
+ 
+  * the file names of the `pickle` files
+    * `words_list_file_name`,
+    * `words_counter_file_name`,
+    * `characters_list_file_name`, and
+    * `characters_frequencies_file_name`) 
+  * and the template string of the file name of the input/output examples of the dataset
+  (`np_file_name_template`). 
+
+The `model` entry, has:
+
+  * the name of the directory (in the `root_dirs/outputs`) where the checkpoints of the
+  baseline DNN will be saved - `model_dir`,
+  * the template file name of the checkpoint file - `checkpoint_model_name`, and
+  * the file name that the baseline DNN will look as pre-trained model - `pre_trained_model_name`.
+  
+Finally, the `logging` entry has: 
+
+  * the directory where the logging files will be placed - `logger_dir`, 
+  * and the base file name of the logging - `caption_logger_file`. 
