@@ -26,7 +26,6 @@ model:
   checkpoint_model_name: 'dcase_model_baseline.pt'
   pre_trained_model_name: 'dcase_model_pre_trained.pytorch'
 logging:
-  root_dir: 'outputs'
   logger_dir: 'logging'
   caption_logger_file: 'captions_baseline.txt'
 # EOF
