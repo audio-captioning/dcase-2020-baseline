@@ -1,17 +1,12 @@
-# ---------------------------------
+# =================================
 # Settings for the baseline method.
 #
 # author: Konstantinos Drossos
 # affiliation: Tampere University
-# ---------------------------------
+# =================================
 model: !include model_baseline.yaml
 # ----------------------
-workflow:
-  do_training: False
-  do_evaluation: True
-# ----------------------
 data:
-  files: !include files.yaml
   input_field_name: 'features'
   output_field_name: 'words_ind'
   load_into_memory: No
@@ -33,13 +28,4 @@ training:
   force_cpu: No
   text_output_every_nb_epochs: !!int 10
   nb_examples_to_sample: 100
-# ----------------------
-evaluation:
-  model_dir: 'last_models'
-  model_name: 'model_baseline.pt'
-# ----------------------
-logging:
-  root_dir: 'outputs'
-  logger_dir: 'logging'
-  caption_logger_file: 'captions_baseline.txt'
 # EOF
