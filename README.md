@@ -1,4 +1,4 @@
-# Audio captioning DCASE baseline system - 2020
+# Audio captioning DCASE 2020 baseline system
 
 Welcome to the repository of the audio captioning baseline system
 for the DCASE challenge of 2020. 
