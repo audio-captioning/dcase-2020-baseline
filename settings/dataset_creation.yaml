@@ -17,7 +17,7 @@ annotations:
   nb_captions: 5
   keep_case: No
   remove_punctuation_words: Yes
-  remove_punctuation_chars: No
+  remove_punctuation_chars: Yes
   use_unique_words_per_caption: No
   use_unique_chars_per_caption: No
 # -----------------------------------
