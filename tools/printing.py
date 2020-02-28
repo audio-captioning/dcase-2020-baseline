@@ -58,10 +58,10 @@ def init_loggers(verbose, settings):
             filter=lambda record, i=indent:
             record['extra']['indent'] == i and not record['extra']['is_caption'])
 
-    logging_path = Path(settings['root_dir'],
-                        settings['logger_dir'])
+    logging_path = Path(settings['root_dirs']['outputs'],
+                        settings['logging']['logger_dir'])
 
-    log_file_main = f'{settings["caption_logger_file"]}'
+    log_file_main = f'{settings["logging"]["caption_logger_file"]}'
 
     logging_file = logging_path.joinpath(log_file_main)
 
