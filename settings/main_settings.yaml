@@ -7,8 +7,8 @@
 # =================================
 workflow:
   dataset_creation: Yes
-  dnn_training: yes
-  captions_evaluation: yes
+  dnn_training: Yes
+  captions_evaluation: Yes
 # ---------------------------------
 dataset_creation_settings: !include dataset_creation.yaml
 # -----------------------------------
