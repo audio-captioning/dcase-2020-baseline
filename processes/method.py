@@ -315,23 +315,26 @@ def _get_nb_output_classes(settings: MutableMapping[str, Any]) \
         return len(pickle.load(f))
 
 
-def _load_indices_file(settings: MutableMapping[str, Any]) \
+def _load_indices_file(settings_files: MutableMapping[str, Any],
+                       settings_data: MutableMapping[str, Any]) \
         -> MutableSequence[str]:
     """Loads and returns the indices file.
 
-    :param settings: Settings to be used.
-    :type settings: dict
+    :param settings_files: Settings of file i/o to be used.
+    :type settings_files: dict
+    :param settings_data: Settings of data to be used. .
+    :type settings_data: dict
     :return: The indices file.
     :rtype: list[str]
     """
     path = Path(
-        settings['files']['root_dir'],
-        settings['files']['dataset_dir'])
+        settings_files['root_dirs']['data'],
+        settings_files['dataset']['pickle_files_dir'])
     p_field = 'words_list_file_name' \
-        if settings['output_field_name'].startswith('words') \
+        if settings_data['output_field_name'].startswith('words') \
         else 'characters_list_file_name'
     return file_io.load_pickle_file(
-        path.joinpath(settings['files'][p_field]))
+        path.joinpath(settings_files['files'][p_field]))
 
 
 def method(settings: MutableMapping[str, Any]) \
@@ -343,15 +346,16 @@ def method(settings: MutableMapping[str, Any]) \
     """
     pretty_printer = printing.get_pretty_printer()
     logger_main = logger.bind(is_caption=False, indent=1)
-    device, device_name = get_device(settings['training']['force_cpu'])
+    device, device_name = get_device(
+        settings['dnn_training_settings']['training']['force_cpu'])
 
     model_dir = Path(
-        settings['model']['root_dir'],
-        settings['model']['output']['models_dir'])
+        settings['dirs_and_files']['root_dirs']['outputs'],
+        settings['dirs_and_files']['model']['model_dir'])
 
     model_dir.mkdir(parents=True, exist_ok=True)
 
-    model_file_name = f'{settings["model"]["output"]["file_name"]}'
+    model_file_name = f'{settings["dirs_and_files"]["model"]["checkpoint_model_name"]}'
 
     logger_main.info(f'Process on {device_name}\n')
 
@@ -359,7 +363,9 @@ def method(settings: MutableMapping[str, Any]) \
                      f'{pretty_printer.pformat(settings)}\n')
 
     logger_main.info('Loading indices file')
-    indices_list = _load_indices_file(settings['data'])
+    indices_list = _load_indices_file(
+        settings['dirs_and_files'],
+        settings['dnn_training_settings']['data'])
     logger_main.info('Done')
 
     logger_main.info('Setting up model')
