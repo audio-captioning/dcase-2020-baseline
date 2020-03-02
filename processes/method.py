@@ -334,7 +334,7 @@ def _load_indices_file(settings_files: MutableMapping[str, Any],
         if settings_data['output_field_name'].startswith('words') \
         else 'characters_list_file_name'
     return file_io.load_pickle_file(
-        path.joinpath(settings_files['files'][p_field]))
+        path.joinpath(settings_files['dataset']['files'][p_field]))
 
 
 def method(settings: MutableMapping[str, Any]) \
