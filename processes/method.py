@@ -369,7 +369,7 @@ def method(settings: MutableMapping[str, Any]) \
     logger_main.info('Done')
 
     logger_main.info('Setting up model')
-    model: Module = get_model(settings['model'],
+    model: Module = get_model(settings['dnn_training_settings']['model'],
                               _get_nb_output_classes(settings))
     model.to(device)
     logger_main.info('Done\n')
