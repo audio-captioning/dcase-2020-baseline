@@ -72,7 +72,7 @@ def init_loggers(verbose, settings):
     logging_path.mkdir(parents=True, exist_ok=True)
 
     if not verbose:
-        logger.disable('__main__')
+        logger.disable()
 
 
 # EOF
