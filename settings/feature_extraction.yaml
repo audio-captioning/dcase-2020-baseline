@@ -1,19 +1,11 @@
-# Feature extraction process settings.
+# =================================
+# Feature extraction process
+# settings.
 #
-# author: Konstantinos Drossos -- Tampere University
-# ===================================
-package: 'processes'
-# -----------------------------------
-module: 'features_log_mel_bands'
-# -----------------------------------
-data_files_suffix: '.npy'
-# -----------------------------------
+# author: Konstantinos Drossos
+# affiliation: Tampere University
+# =================================
 keep_raw_audio_data: No
-# -----------------------------------
-output:
-  dir_output: ''
-  dir_development: 'clotho_dataset_dev'
-  dir_evaluation: 'clotho_dataset_eva'
 # -----------------------------------
 process:
   sr: 44100
