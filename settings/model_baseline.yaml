@@ -4,6 +4,8 @@
 # author: Konstantinos Drossos
 # affiliation: Tampere University
 # =================================
+use_pre_trained_model: No
+# -----------------------------------
 encoder:
   input_dim_encoder: 64
   hidden_dim_encoder: 256
