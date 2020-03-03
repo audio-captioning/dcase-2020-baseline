@@ -8,6 +8,7 @@
 workflow:
   dataset_creation: Yes
   dnn_training: Yes
+  dnn_evaluation: Yes
   captions_evaluation: Yes
 # ---------------------------------
 dataset_creation_settings: !include dataset_creation.yaml
