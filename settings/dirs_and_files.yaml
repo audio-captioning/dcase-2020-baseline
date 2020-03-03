@@ -9,11 +9,18 @@ root_dirs:
   data: 'data'
 # -----------------------------------
 dataset:
+  output: &dataset_output_dir 'data_splits'
+  development: &dev 'development'
+  evaluation: &eva 'evaluation'
+  features_dirs:
+    output: *dataset_output_dir
+    development: *dev
+    evaluation: *eva
   audio_dirs:
     downloaded: 'clotho_audio_files'
-    output: 'data_splits'
-    development: 'development'
-    evaluation: 'evaluation'
+    output: *dataset_output_dir
+    development: 'development_audio'
+    evaluation: 'evaluation_audio'
   annotations_dir: 'clotho_csv_files'
   pickle_files_dir: 'pickles'
   files:
@@ -26,7 +33,7 @@ dataset:
 model:
   model_dir: 'models'
   checkpoint_model_name: 'dcase_model_baseline.pt'
-  pre_trained_model_name: 'dcase_model_pre_trained.pytorch'
+  pre_trained_model_name: 'latest_dcase_model_baseline.pt'
 # -----------------------------------
 logging:
   logger_dir: 'logging'
