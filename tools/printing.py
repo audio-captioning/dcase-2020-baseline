@@ -50,7 +50,12 @@ def init_loggers(verbose, settings):
     logger.remove()
 
     for indent in range(3):
-        log_string = '{level} | [{time:HH:mm:ss}] {name} -- {message}'.rjust(indent*2)
+        log_string = '{level} | [{time}] {name} -- {space}{message}'.format(
+            level='{level}',
+            time='{time:HH:mm:ss}',
+            name='{name}',
+            message='{message}',
+            space=' ' * (indent*2))
         logger.add(
             stdout,
             format=log_string,
