@@ -28,7 +28,7 @@ __all__ = ['method']
 def _decode_outputs(predicted_outputs: MutableSequence[Tensor],
                     ground_truth_outputs: MutableSequence[Tensor],
                     indices_object: MutableSequence[str],
-                    file_names: MutableSequence[Path],
+                    file_names: MutableSequence[Union[Path, str]],
                     eos_token: str,
                     print_to_console: bool) \
         -> Tuple[List[Dict[str, str]], List[Dict[str, str]]]:
@@ -41,7 +41,7 @@ def _decode_outputs(predicted_outputs: MutableSequence[Tensor],
     :param indices_object: Object to map indices to text (words or chars).
     :type indices_object: list[str]
     :param file_names: List of ile names used.
-    :type file_names: list[pathlib.Path]
+    :type file_names: list[pathlib.Path|str]
     :param eos_token: End of sequence token to be used.
     :type eos_token: str
     :param print_to_console: Print captions to console?
@@ -66,12 +66,15 @@ def _decode_outputs(predicted_outputs: MutableSequence[Tensor],
             ground_truth_outputs, predicted_outputs, file_names):
         predicted_words = softmax(b_predictions, dim=-1).argmax(1)
 
-        predicted_caption = [indices_object[i.item()] for i in predicted_words]
-        gt_caption = [indices_object[i.item()] for i in gt_words]
+        predicted_caption = [indices_object[i.item()]
+                             for i in predicted_words]
+        gt_caption = [indices_object[i.item()]
+                      for i in gt_words]
 
         gt_caption = gt_caption[:gt_caption.index(eos_token)]
         try:
-            predicted_caption = predicted_caption[:predicted_caption.index(eos_token)]
+            predicted_caption = predicted_caption[
+                                :predicted_caption.index(eos_token)]
         except ValueError:
             pass
 
@@ -91,7 +94,8 @@ def _decode_outputs(predicted_outputs: MutableSequence[Tensor],
         else:
             for d_i, d in enumerate(captions_gt):
                 if f_n == d['file_name']:
-                    len_captions = len([i_c for i_c in d.keys() if i_c.startswith('caption_')]) + 1
+                    len_captions = len([i_c for i_c in d.keys()
+                                        if i_c.startswith('caption_')]) + 1
                     d.update({f'caption_{len_captions}': gt_caption})
                     captions_gt[d_i] = d
                     break
@@ -100,10 +104,12 @@ def _decode_outputs(predicted_outputs: MutableSequence[Tensor],
                        f'\tPredicted caption: {predicted_caption}',
                        f'\tOriginal caption: {gt_caption}\n\n']
 
-        [caption_logger.info(log_string) for log_string in log_strings]
+        [caption_logger.info(log_string)
+         for log_string in log_strings]
 
         if print_to_console:
-            [main_logger.info(log_string) for log_string in log_strings]
+            [main_logger.info(log_string)
+             for log_string in log_strings]
 
     if print_to_console:
         main_logger.info(f'{text_sep}\n{text_sep}\n{text_sep}\n\n')
@@ -114,38 +120,43 @@ def _decode_outputs(predicted_outputs: MutableSequence[Tensor],
 
 
 def _do_evaluation(model: Module,
-                   settings:  MutableMapping[str, Any],
+                   settings_data:  MutableMapping[str, Any],
+                   settings_io:  MutableMapping[str, Any],
                    indices_list: MutableSequence[str]) \
         -> None:
     """Evaluation of an optimized model.
 
     :param model: Model to use.
     :type model: torch.nn.Module
-    :param settings: Settings to use.
-    :type settings: dict
+    :param settings_data: Data settings to use.
+    :type settings_data: dict
     :param indices_list: Sequence with the words of the captions.
     :type indices_list: list[str]
     """
     model.eval()
     logger_main = logger.bind(is_caption=False, indent=1)
 
-    data_path_evaluation = Path(settings['data']['files']['root_dir'],
-                                settings['data']['files']['baseline_data_dir'],
-                                'clotho_dataset_eva')
+    data_path_evaluation = Path(
+        settings_io['root_dirs']['data'],
+        settings_io['dataset']['features_dirs']['output'],
+        settings_io['dataset']['features_dirs']['evaluation'])
 
     logger_main.info('Getting evaluation data')
     validation_data = get_clotho_loader(
-        'clotho_dataset_eva',
+        settings_io['dataset']['features_dirs']['evaluation'],
         is_training=False,
-        settings=settings['data'])
+        settings_data=settings_data,
+        settings_io=settings_io)
     logger_main.info('Done')
 
     text_sep = '-' * 100
     starting_text = 'Starting evaluation on evaluation data'
 
     logger_main.info(starting_text)
-    logger.bind(is_caption=True, indent=0).info(f'{text_sep}\n{text_sep}\n{text_sep}\n\n')
-    logger.bind(is_caption=True, indent=0).info(f'{starting_text}.\n\n')
+    logger.bind(is_caption=True, indent=0).info(
+        f'{text_sep}\n{text_sep}\n{text_sep}\n\n')
+    logger.bind(is_caption=True, indent=0).info(
+        f'{starting_text}.\n\n')
 
     with no_grad():
         evaluation_outputs = module_epoch_passing(
@@ -157,7 +168,7 @@ def _do_evaluation(model: Module,
         evaluation_outputs[2],
         indices_object=indices_list,
         file_names=list(data_path_evaluation.iterdir()),
-        eos_token=settings['data']['eos_token'],
+        eos_token='<eos>',
         print_to_console=False)
 
     logger_main.info('Evaluation done')
@@ -169,7 +180,12 @@ def _do_evaluation(model: Module,
 
 
 def _do_training(model: Module,
-                 settings:  MutableMapping[str, Union[Any, MutableMapping[str, Any]]],
+                 settings_training:  MutableMapping[
+                     str, Union[Any, MutableMapping[str, Any]]],
+                 settings_data:  MutableMapping[
+                     str, Union[Any, MutableMapping[str, Any]]],
+                 settings_io:  MutableMapping[
+                     str, Union[Any, MutableMapping[str, Any]]],
                  model_file_name: str,
                  model_dir: Path,
                  indices_list: MutableSequence[str]) \
@@ -178,8 +194,12 @@ def _do_training(model: Module,
 
     :param model: Model to optimize.
     :type model: torch.nn.Module
-    :param settings: Settings to use.
-    :type settings: dict
+    :param settings_training: Training settings to use.
+    :type settings_training: dict
+    :param settings_data: Training data settings to use.
+    :type settings_data: dict
+    :param settings_io: Data I/O settings to use.
+    :type settings_io: dict
     :param model_file_name: File name of the model.
     :type model_file_name: str
     :param model_dir: Directory to serialize the model to.
@@ -189,8 +209,8 @@ def _do_training(model: Module,
     """
     # Initialize variables for the training process
     prv_training_loss = 1e8
-    patience: int = settings['training']['patience']
-    loss_thr: float = settings['training']['loss_thr']
+    patience: int = settings_training['patience']
+    loss_thr: float = settings_training['loss_thr']
     patience_counter = 0
     best_epoch = 0
 
@@ -202,23 +222,23 @@ def _do_training(model: Module,
 
     # Get training data and count the amount of batches
     training_data = get_clotho_loader(
-        'clotho_dataset_dev',
+        settings_io['dataset']['features_dirs']['development'],
         is_training=True,
-        settings=settings['data'])
-    model.batch_counter = len(training_data)
+        settings_data=settings_training,
+        settings_io=settings_io)
 
     logger_main.info('Done')
 
     # Initialize loss and optimizer objects
     objective = CrossEntropyLoss()
     optimizer = Adam(params=model.parameters(),
-                     lr=settings['training']['optimizer']['lr'])
+                     lr=settings_training['optimizer']['lr'])
 
     # Inform that we start training
     logger_main.info('Starting training')
 
     model.train()
-    for epoch in range(settings['training']['nb_epochs']):
+    for epoch in range(settings_training['nb_epochs']):
 
         # Log starting time
         start_time = time()
@@ -229,8 +249,8 @@ def _do_training(model: Module,
             module=model,
             objective=objective,
             optimizer=optimizer,
-            grad_norm=settings['training']['grad_norm']['norm'],
-            grad_norm_val=settings['training']['grad_norm']['value'])
+            grad_norm=settings_training['grad_norm']['norm'],
+            grad_norm_val=settings_training['grad_norm']['value'])
         objective_output, output_y_hat, output_y, f_names = epoch_output
 
         # Get mean loss of training and print it with logger
@@ -241,19 +261,21 @@ def _do_training(model: Module,
                          f'Time: {time() - start_time:>5.3f}')
 
         # Check if we have to decode captions for the current epoch
-        if divmod(epoch + 1, settings['training']['text_output_every_nb_epochs'])[-1] == 0:
+        if divmod(epoch + 1,
+                  settings_training['text_output_every_nb_epochs'])[-1] == 0:
 
             # Get the subset of files for decoding their captions
             sampling_indices = sorted(randperm(len(output_y_hat))
-                                      [:settings['training']['nb_examples_to_sample']]
+                                      [:settings_training['nb_examples_to_sample']]
                                       .tolist())
 
             # Do the decoding
             _decode_outputs(*zip(*[[output_y_hat[i], output_y[i]]
                                  for i in sampling_indices]),
                             indices_object=indices_list,
-                            file_names=[f_names[i_f_name] for i_f_name in sampling_indices],
-                            eos_token=settings['data']['eos_token'],
+                            file_names=[f_names[i_f_name]
+                                        for i_f_name in sampling_indices],
+                            eos_token=settings_data['eos_token'],
                             print_to_console=False)
 
         # Check improvement of loss
@@ -265,7 +287,10 @@ def _do_training(model: Module,
             best_epoch = epoch
 
             # Serialize the model keeping the epoch
-            pt_save(model.state_dict(), str(model_dir.joinpath(f'epoch_{best_epoch:05d}_{model_file_name}')))
+            pt_save(
+                model.state_dict(),
+                str(model_dir.joinpath(
+                    f'epoch_{best_epoch:05d}_{model_file_name}')))
 
             # Zero out the patience
             patience_counter = 0
@@ -277,7 +302,10 @@ def _do_training(model: Module,
 
         # Serialize the model and optimizer.
         for pt_obj, save_str in zip([model, optimizer], ['', '_optimizer']):
-            pt_save(pt_obj.state_dict(), str(model_dir.joinpath(f'latest{save_str}_{model_file_name}')))
+            pt_save(
+                pt_obj.state_dict(),
+                str(model_dir.joinpath(
+                    f'latest{save_str}_{model_file_name}')))
 
         # Check for stopping criteria
         if patience_counter >= patience:
@@ -289,7 +317,9 @@ def _do_training(model: Module,
     logger_main.info('Training done')
 
     # Load best model
-    model.load_state_dict(pt_load(str(model_dir.joinpath(f'epoch_{best_epoch:05d}_{model_file_name}'))))
+    model.load_state_dict(pt_load(
+        str(model_dir.joinpath(
+            f'epoch_{best_epoch:05d}_{model_file_name}'))))
 
 
 def _get_nb_output_classes(settings: MutableMapping[str, Any]) \
@@ -344,8 +374,10 @@ def method(settings: MutableMapping[str, Any]) \
     :param settings: Settings to be used.
     :type settings: dict
     """
+    logger_main = logger.bind(is_caption=False, indent=0)
+    logger_main.info('Bootstrapping method')
     pretty_printer = printing.get_pretty_printer()
-    logger_main = logger.bind(is_caption=False, indent=1)
+    logger_inner = logger.bind(is_caption=False, indent=1)
     device, device_name = get_device(
         settings['dnn_training_settings']['training']['force_cpu'])
 
@@ -357,37 +389,66 @@ def method(settings: MutableMapping[str, Any]) \
 
     model_file_name = f'{settings["dirs_and_files"]["model"]["checkpoint_model_name"]}'
 
-    logger_main.info(f'Process on {device_name}\n')
+    logger_inner.info(f'Process on {device_name}\n')
 
-    logger_main.info('Settings:\n'
-                     f'{pretty_printer.pformat(settings)}\n')
+    logger_inner.info('Settings:\n'
+                      f'{pretty_printer.pformat(settings)}\n')
 
-    logger_main.info('Loading indices file')
+    logger_inner.info('Loading indices file')
     indices_list = _load_indices_file(
         settings['dirs_and_files'],
         settings['dnn_training_settings']['data'])
-    logger_main.info('Done')
+    logger_inner.info('Done')
 
-    logger_main.info('Setting up model')
-    model: Module = get_model(settings['dnn_training_settings']['model'],
-                              _get_nb_output_classes(settings))
-    model.to(device)
-    logger_main.info('Done\n')
+    model: Union[Module, None] = None
 
-    logger_main.info(f'Model:\n{model}\n')
-    logger_main.info('Total amount of parameters: '
-                     f'{sum([i.numel() for i in model.parameters()])}')
+    logger_main.info('Bootstrapping done')
 
-    if settings['workflow']['do_training']:
-        _do_training(model=model, settings=settings,
-                     model_file_name=model_file_name,
-                     model_dir=model_dir,
-                     indices_list=indices_list)
+    if settings['workflow']['dnn_training']:
+        logger_main.info('Doing training')
+        logger_inner.info('Setting up model')
+        model = get_model(
+            settings_model=settings['dnn_training_settings']['model'],
+            settings_io=settings['dirs_and_files'],
+            output_classes=len(indices_list))
+        model.to(device)
+        logger_inner.info('Done\n')
 
-    if settings['workflow']['do_evaluation']:
-        _do_evaluation(model=model,
-                       settings=settings,
-                       indices_list=indices_list)
+        logger_inner.info(f'Model:\n{model}\n')
+        logger_inner.info('Total amount of parameters: '
+                          f'{sum([i.numel() for i in model.parameters()])}')
+        logger_inner.info('Starting training')
+        _do_training(
+            model=model,
+            settings_training=settings['dnn_training_settings']['training'],
+            settings_data=settings['dnn_training_settings']['data'],
+            settings_io=settings['dirs_and_files'],
+            model_file_name=model_file_name,
+            model_dir=model_dir,
+            indices_list=indices_list)
+        logger_inner.info('Training done')
+
+    if settings['workflow']['dnn_evaluation']:
+        logger_main.info('Doing evaluation')
+        if model is None:
+            if not settings['dnn_training_settings']['model']['use_pre_trained_model']:
+                raise AttributeError('Mode is set to only evaluation, but'
+                                     'is specified not to use a pre-trained model.')
+
+            logger_inner.info('Setting up model')
+            model = get_model(
+                settings_model=settings['dnn_training_settings']['model'],
+                settings_io=settings['dirs_and_files'],
+                output_classes=len(indices_list))
+            logger_inner.info('Model ready')
+
+        logger_inner.info('Starting evaluation')
+        _do_evaluation(
+            model=model,
+            settings_data=settings['dnn_training_settings']['data'],
+            settings_io=settings['dirs_and_files'],
+            indices_list=indices_list)
+        logger_inner.info('Evaluation done')
 
 
 def main():
