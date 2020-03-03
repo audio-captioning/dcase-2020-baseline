@@ -9,9 +9,10 @@ workflow:
   dataset_creation: Yes
   dnn_training: Yes
   dnn_evaluation: Yes
-  captions_evaluation: Yes
 # ---------------------------------
 dataset_creation_settings: !include dataset_creation.yaml
+# -----------------------------------
+feature_extraction_settings: !include feature_extraction.yaml
 # -----------------------------------
 dnn_training_settings: !include method_baseline.yaml
 # -----------------------------------
