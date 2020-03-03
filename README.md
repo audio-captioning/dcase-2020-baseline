@@ -3,8 +3,6 @@
 Welcome to the repository of the audio captioning baseline system
 for the DCASE challenge of 2020. 
 
-**Currently the baseline system needs some fixes. Will be ready in the following days**
-
 Here you can find the complete code of the baseline system, consisting
 of:
 
