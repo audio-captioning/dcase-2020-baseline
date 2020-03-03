@@ -33,7 +33,7 @@ def get_argument_parser():
           'help': 'Extension of the settings file (default: `yaml`).'}],
         # ---------------------------------
         [['--verbose', '-v'],
-         {'default': False,
+         {'default': True,
           'action': 'store_true',
           'help': 'Be verbose flag (default False).'}]]
 
