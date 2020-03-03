@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from typing import Tuple, MutableSequence, \
-    Callable, Optional, List, Union
+    Callable, Optional, List, Union, MutableMapping
 from platform import processor
 from pathlib import Path
 
@@ -35,31 +35,34 @@ def get_device(force_cpu: bool) \
         ('cpu', processor())
 
 
-def get_model(settings: dict,
+def get_model(settings_model: MutableMapping[str, Union[str, MutableMapping]],
+              settings_io: MutableMapping[str, Union[str, MutableMapping]],
               output_classes: int) \
         -> Module:
     """Creates and returns the model for the process.
 
-    :param settings: Model specific settings to be used.
-    :type settings: dict
+    :param settings_model: Model specific settings to be used.
+    :type settings_model: dict
+    :param settings_io: File I/O settings to be used.
+    :type settings_io: dict
     :param output_classes: Amount of output classes.
     :type output_classes: int
     :return: Model.
     :rtype: torch.nn.Module
     """
-    encoder_settings = settings['encoder']
-    decoder_settings = settings['decoder']
+    encoder_settings = settings_model['encoder']
+    decoder_settings = settings_model['decoder']
     decoder_settings.update({'nb_classes': output_classes})
 
     kwargs = {**encoder_settings, **decoder_settings}
 
     model = BaselineDCASE(**kwargs)
 
-    if settings['pre_trained_model']['use_pre_trained']:
+    if settings_model['use_pre_trained_model']:
         model.load_state_dict(pt_load(Path(
-            settings['root_dir'],
-            settings['pre_trained_model']['model_dir'],
-            settings['pre_trained_model']['model_name']
+            settings_io['root_dirs']['outputs'],
+            settings_io['model']['model_dir'],
+            settings_io['model']['pre_trained_model_name']
         )))
 
     return model
