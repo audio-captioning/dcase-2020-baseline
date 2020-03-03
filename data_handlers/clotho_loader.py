@@ -43,20 +43,28 @@ def _clotho_collate_fn(batch: MutableSequence[ndarray]) \
     input_features = batch[0][0].shape[-1]
     eos_token = batch[0][1][-1]
 
-    input_tensor = cat([cat([zeros(max_input_t_steps - i[0].shape[0], input_features).float(),
-                             from_numpy(i[0]).float()]).unsqueeze(0) for i in batch])
+    input_tensor = cat([
+        cat([zeros(
+            max_input_t_steps - i[0].shape[0],
+            input_features).float(),
+             from_numpy(i[0]).float()]).unsqueeze(0) for i in batch])
 
-    output_tensor = cat([cat([
-        from_numpy(i[1]).long(),
-        ones(max_output_t_steps - len(i[1])).mul(eos_token).long()]).unsqueeze(0)
-                         for i in batch])
+    output_tensor = cat([
+        cat([
+            from_numpy(i[1]).long(),
+            ones(max_output_t_steps - len(i[1])).mul(eos_token).long()
+        ]).unsqueeze(0) for i in batch])
 
     return input_tensor, output_tensor, file_names
 
 
 def get_clotho_loader(split: str,
                       is_training: bool,
-                      settings: MutableMapping[str, Union[str, MutableMapping[str, str], bool]]) \
+                      settings_data: MutableMapping[
+                          str, Union[str, bool, MutableMapping[str, str]]],
+                      settings_io: MutableMapping[
+                          str, Union[str, bool, MutableMapping[
+                              str, Union[str, MutableMapping[str, str]]]]]) \
         -> DataLoader:
     """Gets the data loader.
 
@@ -64,30 +72,32 @@ def get_clotho_loader(split: str,
     :type split: str
     :param is_training: Is training data?
     :type is_training: bool
-    :param settings: Data loading and dataset settings.
-    :type settings: dict
+    :param settings_data: Data loading and dataset settings.
+    :type settings_data: dict
+    :param settings_io: Files I/O settings.
+    :type settings_io: dict
     :return: Data loader.
     :rtype: torch.utils.data.DataLoader
     """
     data_dir = Path(
-        settings['files']['root_dir'],
-        settings['files']['baseline_data_dir'])
+        settings_io['root_dirs']['data'],
+        settings_io['dataset']['audio_dirs']['output'])
 
     dataset = ClothoDataset(
         data_dir=data_dir,
         split=split,
-        input_field_name=settings['input_field_name'],
-        output_field_name=settings['output_field_name'],
-        load_into_memory=settings['load_into_memory'])
+        input_field_name=settings_data['input_field_name'],
+        output_field_name=settings_data['output_field_name'],
+        load_into_memory=settings_data['load_into_memory'])
 
-    shuffle = settings['shuffle'] if is_training else False
-    drop_last = settings['drop_last'] if is_training else False
+    shuffle = settings_data['shuffle'] if is_training else False
+    drop_last = settings_data['drop_last'] if is_training else False
 
     return DataLoader(
         dataset=dataset,
-        batch_size=settings['batch_size'],
+        batch_size=settings_data['batch_size'],
         shuffle=shuffle,
-        num_workers=settings['num_workers'],
+        num_workers=settings_data['num_workers'],
         drop_last=drop_last,
         collate_fn=_clotho_collate_fn)
 
