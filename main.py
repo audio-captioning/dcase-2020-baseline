@@ -5,7 +5,6 @@ from pathlib import Path
 
 from loguru import logger
 
-import evaluation
 from processes import method, dataset
 from tools.file_io import load_yaml_file
 from tools.printing import init_loggers
@@ -31,23 +30,28 @@ def main():
                  settings=settings['dirs_and_files'])
 
     logger_main = logger.bind(is_caption=False, indent=1)
+    logger_inner = logger.bind(is_caption=False, indent=2)
 
     if settings['workflow']['dataset_creation']:
         logger_main.info('Starting creation of dataset')
+
+        logger_inner.info('Creating examples')
         dataset.create_dataset(
             settings_dataset=settings['dataset_creation_settings'],
             settings_dirs_and_files=settings['dirs_and_files'])
+        logger_inner.info('Examples created')
+
+        logger_inner.info('Extracting features')
+        dataset.extract_features(
+            root_dir=settings['dirs_and_files']['root_dirs']['data'],
+            settings_data=settings['dirs_and_files']['dataset'],
+            settings_features=settings['feature_extraction_settings'])
+        logger_inner.info('Features extracted')
         logger_main.info('Creation of dataset ended')
 
-    if settings['workflow']['dnn_training']:
-        logger_main.info('Starting optimization of method')
+    if settings['workflow']['dnn_training'] or \
+            settings['workflow']['dnn_evaluation']:
         method.method(settings)
-        logger_main.info('Optimization of method ended')
-
-    if settings['workflow']['captions_evaluation']:
-        logger_main.info('Starting evaluation of captions')
-        evaluation.evaluate_captions(settings)
-        logger_main.info('Evaluation of captions ended')
 
 
 if __name__ == '__main__':
