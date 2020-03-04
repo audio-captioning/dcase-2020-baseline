@@ -238,23 +238,19 @@ def main():
     file_ext = args.file_ext
     verbose = args.verbose
 
+    # Load settings file.
     settings = load_yaml_file(Path(
         file_dir, f'{config_file}.{file_ext}'))
 
     init_loggers(verbose=verbose,
-                 settings=settings['dirs_and_files']['logging'])
+                 settings=settings['dirs_and_files'])
 
-    logger_main = logger.bind(is_caption=False, indent=1)
-    logger_sec = logger.bind(is_caption=False, indent=2)
+    logger_main = logger.bind(is_caption=False, indent=0)
+    logger_sec = logger.bind(is_caption=False, indent=1)
 
     logger_main.info(datetime.now().strftime('%Y-%m-%d %H:%M'))
 
     logger_main.info('Doing only dataset creation')
-
-    # Load settings file.
-    logger_main.info('Loading settings')
-    settings = load_settings_file(args.config_file)
-    logger_main.info('Settings loaded')
 
     # Create the dataset.
     logger_main.info('Starting Clotho dataset creation')
