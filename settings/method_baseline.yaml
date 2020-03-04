@@ -22,7 +22,7 @@ training:
   optimizer:
     lr: !!float 1e-4
   grad_norm:
-    value: !!float 1.
+    value: !!float 1.  # Set value to -1 for not using gradient clipping
     norm: 2
   force_cpu: No
   text_output_every_nb_epochs: !!int 10
