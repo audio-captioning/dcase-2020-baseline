@@ -224,7 +224,7 @@ def _do_training(model: Module,
     training_data = get_clotho_loader(
         settings_io['dataset']['features_dirs']['development'],
         is_training=True,
-        settings_data=settings_training,
+        settings_data=settings_data,
         settings_io=settings_io)
 
     logger_main.info('Done')
