@@ -189,6 +189,15 @@ and assessment of the baseline DNN. The `data/pickles` directory holds the `pick
 have the frequencies of the words and characters (so one can use weights in the objective function)
 and the correspondence of words and characters with indices.
 
+**Note bold:** Once you have created the dataset, there is no need to create it every time. That is, after you create the dataset using the baseline system, then you can set 
+
+````yaml
+workflow:
+  dataset_creation: No
+````
+
+at the `settings/main_settings.yaml` file. 
+
 ### Conduct an experiment
 
 To conduct an experiment using the baseline DNN, you can use the `main.py` script. In case that you
