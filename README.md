@@ -223,9 +223,19 @@ that were created in the [create the dataset](#create-the-dataset) section.
 To use the pre-trained model, you have first to obtain the pre-trained weights. These will
 be released on Zenodo, on the following days. Stay tuned!
 
-### Evaluate predicted captions
+### Evaluate predictions
 
-### Modify the hyper-parameters
+To evaluate the predictions, you have first to have a optimized (i.e. trained) model (i.e. a DNN). 
+You can obtain this DNN directly from training process (i.e. you do first training and then
+evaluation) or you can use some pre-trained weights. 
+
+To use some pre-trained weights, you have to specify the name of the file having the weights
+at the `settings/dirs_and_files.yaml` file. Also, you have to indicate that you will use a pre-trained
+model (at the `settings/model_baseline.yaml` file) and indicate that you want to do evaluation
+of the DNN (at the `settings/method_baseline.yaml` file). 
+
+**Please note bold:** Before being able to run the code for the evaluation of the predictions, 
+you have first to run the script `get_stanford_models.sh` in the `coco_caption` directory. 
 
 ## Explanation of settings 
 
