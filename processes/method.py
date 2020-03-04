@@ -460,16 +460,17 @@ def main():
     verbose = args.verbose
 
     settings = file_io.load_yaml_file(Path(
-        file_dir, config_file, file_ext))
+        file_dir, f'{config_file}.{file_ext}'))
 
-    printing.init_loggers(verbose=verbose,
-                          settings=settings['logging'])
+    printing.init_loggers(
+        verbose=verbose,
+        settings=settings['dirs_and_files'])
 
-    settings = Path(args.dir_file,
-                    f'{args.config_file}{args.ext_file}')
-    settings = file_io.load_yaml_file(settings)
+    logger_main = logger.bind(is_caption=False, indent=0)
 
+    logger_main.info('Starting method only')
     method(settings)
+    logger_main.info('Method\'s done')
 
 
 if __name__ == '__main__':
