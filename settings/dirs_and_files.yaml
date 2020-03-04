@@ -9,18 +9,17 @@ root_dirs:
   data: 'data'
 # -----------------------------------
 dataset:
-  output: &dataset_output_dir 'data_splits'
   development: &dev 'development'
   evaluation: &eva 'evaluation'
   features_dirs:
-    output: *dataset_output_dir
+    output: 'data_splits'
     development: *dev
     evaluation: *eva
   audio_dirs:
     downloaded: 'clotho_audio_files'
-    output: *dataset_output_dir
-    development: 'development_audio'
-    evaluation: 'evaluation_audio'
+    output: 'data_splits_audio'
+    development: *dev
+    evaluation: *eva
   annotations_dir: 'clotho_csv_files'
   pickle_files_dir: 'pickles'
   files:
