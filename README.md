@@ -261,21 +261,22 @@ In the `settings/main_settings.yaml` file, you can find the following settings:
     workflow:
       dataset_creation: Yes
       dnn_training: yes
-      captions_evaluation: yes
+      dnn_evaluation: yes
     dataset_creation_settings: !include dataset_creation.yaml
+    feature_extraction_settings: !include feature_extraction.yaml
     dnn_training_settings: !include method_baseline.yaml
     dirs_and_files: !include dirs_and_files.yaml
 
 The settings at the `workflow` block, correspond to the different processes that the baseline
 system can do; the creation of the dataset (`dataset_creation`), the optimization of the DNN
-(`dnn_training`), and the evaluation of captions (`captions_evaluation`). By indicating
+(`dnn_training`), and the evaluation of captions (`dnn_evaluation`). By indicating
 a `yes` or a `no`, you can switch on (with `yes`) or off (with `no`) the processes. For example,
 the 
 
     workflow:
           dataset_creation: no
           dnn_training: yes
-          captions_evaluation: no
+          dnn_evaluation: no
           
 means that the baseline system will **not** create the dataset and will **not** evaluate captions,
 but it will do the optimization of the DNN. 
@@ -293,11 +294,17 @@ The `settings/dirs_and_files.yaml` file, holds the following settings:
       outputs: 'outputs'
       data: 'data'
     dataset:
+      development: &dev 'development'
+      evaluation: &eva 'evaluation'
+      features_dirs:
+        output: 'data_splits'
+        development: *dev
+        evaluation: *eva
       audio_dirs:
         downloaded: 'clotho_audio_files'
-        output: 'data_splits'
-        development: 'development'
-        evaluation: 'evaluation'
+        output: 'data_splits_audio'
+        development: *dev
+        evaluation: *eva
       annotations_dir: 'clotho_csv_files'
       pickle_files_dir: 'pickles'
       files:
@@ -322,7 +329,18 @@ the data will be used as the root directory where the data are, e.g. the `data` 
 directory mentioned in section [setting up the data](#setting-up-the-data). 
 
 The `dataset` has the directory and file names used when creating and accessing the dataset
-files. The `dataset/audio` has the directory names that:
+files. The `development` and `evaluation` are the name of the directories that will hold
+the corresponding (in each case) development and evaluation (respectively) data. These
+names can be overridden in the corresponding entries (for example, in the `dataset/audio_dirs`
+for the audio directories). 
+
+The `dataset/features_dirs` has the directory names that: 
+
+  * parent directory for the ready-to-use features - `output`
+  * the development features - `development`
+  * the evaluation features - `evaluation`
+
+The `dataset/audio` has the directory names that:
 
   * the downloaded audio will be - `downloaded`
   * the dataset files (i.e. the input/output examples) will be - `output`
@@ -356,11 +374,11 @@ Finally, the `logging` entry has:
 
 ### Settings for the creation of the dataset
 
-The file `settings/daatset_creation.yaml` has: 
+The file `settings/dataset_creation.yaml` has: 
 
     workflow:
       create_dataset: Yes
-      validate_dataset: Yes
+      validate_dataset: No
     annotations:
       development_file: 'clotho_captions_development.csv'
       evaluation_file: 'clotho_captions_evaluation.csv'
@@ -414,6 +432,7 @@ The `audio` block holds settings for processing the audio data:
 
 The file `settings/model_baseline.yaml` holds the settings for the baseline DNN:
 
+    use_pre_trained_model: No
     encoder:
       input_dim_encoder: 64
       hidden_dim_encoder: 256
@@ -425,6 +444,10 @@ The file `settings/model_baseline.yaml` holds the settings for the baseline DNN:
       dropout_p_decoder: .25
       max_out_t_steps: 22
       
+The `use_pre_trained_model` flag indicates if a pre-trained model will be used. If
+this flag is set to `Yes`, then the name of the file with the weights of the pre-trained
+model has to be specified in the `settings/dirs_and_files.yaml` file. 
+ 
 The `encoder` block has the settings for the encoder of the baseline DNN:
 
   * the input dimensionality to the first layer of the encoder - `input_dim_encoder`
