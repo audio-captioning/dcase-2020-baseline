@@ -4,10 +4,11 @@
 from pathlib import Path
 import pickle
 from time import time
-from typing import MutableMapping, MutableSequence, Any, Union, List, Dict, \
-    Tuple
+from typing import MutableMapping, MutableSequence,\
+    Any, Union, List, Dict, Tuple
 
-from torch import Tensor, no_grad, save as pt_save, load as pt_load, randperm
+from torch import Tensor, no_grad, save as pt_save, \
+    load as pt_load, randperm
 from torch.nn import CrossEntropyLoss, Module
 from torch.optim import Adam
 from torch.nn.functional import softmax
@@ -15,7 +16,8 @@ from loguru import logger
 
 from tools import file_io, printing
 from tools.argument_parsing import get_argument_parser
-from tools.model import module_epoch_passing, get_model, get_device
+from tools.model import module_epoch_passing, get_model,\
+    get_device
 from data_handlers.clotho_loader import get_clotho_loader
 from eval_metrics import evaluate_metrics
 
@@ -114,7 +116,8 @@ def _decode_outputs(predicted_outputs: MutableSequence[Tensor],
     if print_to_console:
         main_logger.info(f'{text_sep}\n{text_sep}\n{text_sep}\n\n')
 
-    logger.bind(is_caption=False, indent=0).info('Decoding of captions ended')
+    logger.bind(is_caption=False, indent=0).info(
+        'Decoding of captions ended')
 
     return captions_pred, captions_gt
 
