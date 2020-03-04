@@ -29,8 +29,8 @@ def main():
     init_loggers(verbose=verbose,
                  settings=settings['dirs_and_files'])
 
-    logger_main = logger.bind(is_caption=False, indent=1)
-    logger_inner = logger.bind(is_caption=False, indent=2)
+    logger_main = logger.bind(is_caption=False, indent=0)
+    logger_inner = logger.bind(is_caption=False, indent=1)
 
     if settings['workflow']['dataset_creation']:
         logger_main.info('Starting creation of dataset')
