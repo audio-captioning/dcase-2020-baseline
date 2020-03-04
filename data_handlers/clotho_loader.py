@@ -81,7 +81,7 @@ def get_clotho_loader(split: str,
     """
     data_dir = Path(
         settings_io['root_dirs']['data'],
-        settings_io['dataset']['audio_dirs']['output'])
+        settings_io['dataset']['features_dirs']['output'])
 
     dataset = ClothoDataset(
         data_dir=data_dir,
