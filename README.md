@@ -220,8 +220,9 @@ that were created in the [create the dataset](#create-the-dataset) section.
 
 ### Use the pre-trained model
 
-To use the pre-trained model, you have first to obtain the pre-trained weights. These will
-be released on Zenodo, on the following days. Stay tuned!
+To use the pre-trained model, you have first to obtain the pre-trained weights. The
+pre-trained weights are freely available online at Zenodo
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3697687.svg)](https://doi.org/10.5281/zenodo.3697687)
 
 ### Evaluate predictions
 
