@@ -30,7 +30,7 @@ __all__ = ['method']
 def _decode_outputs(predicted_outputs: MutableSequence[Tensor],
                     ground_truth_outputs: MutableSequence[Tensor],
                     indices_object: MutableSequence[str],
-                    file_names: MutableSequence[Union[Path, str]],
+                    file_names: MutableSequence[Path],
                     eos_token: str,
                     print_to_console: bool) \
         -> Tuple[List[Dict[str, str]], List[Dict[str, str]]]:
@@ -43,7 +43,7 @@ def _decode_outputs(predicted_outputs: MutableSequence[Tensor],
     :param indices_object: Object to map indices to text (words or chars).
     :type indices_object: list[str]
     :param file_names: List of ile names used.
-    :type file_names: list[pathlib.Path|str]
+    :type file_names: list[pathlib.Path]
     :param eos_token: End of sequence token to be used.
     :type eos_token: str
     :param print_to_console: Print captions to console?
@@ -276,7 +276,7 @@ def _do_training(model: Module,
             _decode_outputs(*zip(*[[output_y_hat[i], output_y[i]]
                                  for i in sampling_indices]),
                             indices_object=indices_list,
-                            file_names=[f_names[i_f_name]
+                            file_names=[Path(f_names[i_f_name])
                                         for i_f_name in sampling_indices],
                             eos_token='<eos>',
                             print_to_console=False)
