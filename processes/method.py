@@ -278,7 +278,7 @@ def _do_training(model: Module,
                             indices_object=indices_list,
                             file_names=[f_names[i_f_name]
                                         for i_f_name in sampling_indices],
-                            eos_token=settings_data['eos_token'],
+                            eos_token='<eos>',
                             print_to_console=False)
 
         # Check improvement of loss
