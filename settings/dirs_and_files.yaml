@@ -32,7 +32,7 @@ dataset:
 model:
   model_dir: 'models'
   checkpoint_model_name: 'dcase_model_baseline.pt'
-  pre_trained_model_name: 'latest_dcase_model_baseline.pt'
+  pre_trained_model_name: 'dcase_model_baseline_pre_trained.pt'
 # -----------------------------------
 logging:
   logger_dir: 'logging'
