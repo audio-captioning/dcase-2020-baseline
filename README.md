@@ -26,11 +26,25 @@ This repository is maintained by [K. Drossos](https://github.com/dr-costas).
 
 ## Table of contents
 
+  0. [Too long - Didn't read (TL-DR)](#too-long---didnt-read-tl-dr)
   1. [Setting up the code](#setting-up-the-code)
   2. [Preparing the data](#preparing-the-data)
   3. [Use the baseline system](#use-the-baseline-system)
   5. [Explanation of settings](#explanation-of-settings)
   
+  
+## Too long - Didn't read (TL-DR)
+
+If you are familiar with most of the stuff and you want to use this system
+fast as possible, do the following: 
+
+  1. Install all dependencies from the corresponding files.
+  2. Make sure that your system has Java installed and enabled. 
+  3. Download the data from Zenodo and place them in the data directory.
+  4. Run the baseline system.  
+  
+If you want or need a bit more details, then read the following sections. 
+
 ## Setting up the code
 
 To start using the audio captioning DCASE 2020 baseline system, firstly you
