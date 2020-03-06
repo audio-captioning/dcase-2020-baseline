@@ -28,9 +28,22 @@ This repository is maintained by [K. Drossos](https://github.com/dr-costas).
 
   0. [Too long - Didn't read (TL-DR)](#too-long---didnt-read-tl-dr)
   1. [Setting up the code](#setting-up-the-code)
+    1. [Using conda](#using-conda-for-installing-dependencies)
+    2. [Using PIP](#using-pip-for-installing-dependencies)
   2. [Preparing the data](#preparing-the-data)
+    1. [Getting the data from Zenodo](#getting-the-data-from-zenodo)
+    2. [Settings up the data](#setting-up-the-data)
   3. [Use the baseline system](#use-the-baseline-system)
+    1. [Create the dataset](#create-the-dataset)
+    2. [Conduct an experiment](#conduct-an-experiment)
+    3. [Use the pre-trained model](#use-the-pre-trained-model)
+    4. [Evaluate predictions](#evaluate-predictions)
   5. [Explanation of settings](#explanation-of-settings)
+    1. [Main settings](#main-settings)
+    2. [Settings for directories and files](#settings-for-directories-and-files)
+    3. [Settings for the creation of the dataset](#settings-for-the-creation-of-the-dataset)
+    4. [Settings for the baseline model](#settings-for-the-baseline-model)
+    5. [Settings for the baseline method](#settings-for-the-baseline-method)
   
   
 ## Too long - Didn't read (TL-DR)
