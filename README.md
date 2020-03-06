@@ -240,6 +240,8 @@ pre-trained weights are freely available online at Zenodo
 
 ### Evaluate predictions
 
+**Note bold:** To use the caption evaluate tools you need to have Java installed and enabled. 
+
 To evaluate the predictions, you have first to have a optimized (i.e. trained) model (i.e. a DNN). 
 You can obtain this DNN directly from training process (i.e. you do first training and then
 evaluation) or you can use some pre-trained weights. 
