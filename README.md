@@ -23,6 +23,7 @@ Clotho data) can also be found
 
 This repository is maintained by [K. Drossos](https://github.com/dr-costas). 
 
+----
 
 ## Table of contents
 
@@ -44,7 +45,8 @@ This repository is maintained by [K. Drossos](https://github.com/dr-costas).
     3. [Settings for the creation of the dataset](#settings-for-the-creation-of-the-dataset)
     4. [Settings for the baseline model](#settings-for-the-baseline-model)
     5. [Settings for the baseline method](#settings-for-the-baseline-method)
-  
+
+----
   
 ## Too long - Didn't read (TL-DR)
 
@@ -56,7 +58,9 @@ fast as possible, do the following:
   3. Download the data from Zenodo and place them in the data directory.
   4. Run the baseline system.  
   
-If you want or need a bit more details, then read the following sections. 
+If you want or need a bit more details, then read the following sections.
+
+---- 
 
 ## Setting up the code
 
@@ -113,6 +117,8 @@ $ pip install -r requirements_pip.txt
 
 The above command will install the required packages using pip. Now you are ready to go
 to the following steps. 
+
+----
 
 ## Preparing the data
 
@@ -172,8 +178,9 @@ directory:
      |   |- clotho_captions_evaluation.csv 
  
 
-Now, you can use the baseline system to extract the features and create the dataset. 
+Now, you can use the baseline system to extract the features and create the dataset.
 
+----
 
 ## Use the baseline system
 
@@ -265,7 +272,9 @@ model (at the `settings/model_baseline.yaml` file) and indicate that you want to
 of the DNN (at the `settings/method_baseline.yaml` file). 
 
 **Please note bold:** Before being able to run the code for the evaluation of the predictions, 
-you have first to run the script `get_stanford_models.sh` in the `coco_caption` directory. 
+you have first to run the script `get_stanford_models.sh` in the `coco_caption` directory.
+
+---- 
 
 ## Explanation of settings 
 
