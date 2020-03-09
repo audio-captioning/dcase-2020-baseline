@@ -443,6 +443,7 @@ def method(settings: MutableMapping[str, Any]) \
                 settings_model=settings['dnn_training_settings']['model'],
                 settings_io=settings['dirs_and_files'],
                 output_classes=len(indices_list))
+            model.to(device)
             logger_inner.info('Model ready')
 
         logger_inner.info('Starting evaluation')
