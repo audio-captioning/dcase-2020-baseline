@@ -23,14 +23,45 @@ Clotho data) can also be found
 
 This repository is maintained by [K. Drossos](https://github.com/dr-costas). 
 
+----
 
 ## Table of contents
 
-  1. [Setting up the code](#setting-up-the-code)
-  2. [Preparing the data](#preparing-the-data)
-  3. [Use the baseline system](#use-the-baseline-system)
-  5. [Explanation of settings](#explanation-of-settings)
+ 1. [Too long - Didn't read (TL-DR)](#too-long---didnt-read-tl-dr)
+ 2. [Setting up the code](#setting-up-the-code)
+    1. [Using conda](#using-conda-for-installing-dependencies)
+    2. [Using PIP](#using-pip-for-installing-dependencies)  
+ 3. [Preparing the data](#preparing-the-data)
+    1. [Getting the data from Zenodo](#getting-the-data-from-zenodo)
+    2. [Settings up the data](#setting-up-the-data)
+ 4. [Use the baseline system](#use-the-baseline-system)
+    1. [Create the dataset](#create-the-dataset)
+    2. [Conduct an experiment](#conduct-an-experiment)
+    3. [Use the pre-trained model](#use-the-pre-trained-model)
+    4. [Evaluate predictions](#evaluate-predictions)
+ 5. [Explanation of settings](#explanation-of-settings)
+    1. [Main settings](#main-settings)
+    2. [Settings for directories and files](#settings-for-directories-and-files)
+    3. [Settings for the creation of the dataset](#settings-for-the-creation-of-the-dataset)
+    4. [Settings for the baseline model](#settings-for-the-baseline-model)
+    5. [Settings for the baseline method](#settings-for-the-baseline-method)
+
+----
   
+## Too long - Didn't read (TL-DR)
+
+If you are familiar with most of the stuff and you want to use this system
+fast as possible, do the following: 
+
+  1. Install all dependencies from the corresponding files.
+  2. Make sure that your system has Java installed and enabled. 
+  3. Download the data from Zenodo and place them in the data directory.
+  4. Run the baseline system.  
+  
+If you want or need a bit more details, then read the following sections.
+
+---- 
+
 ## Setting up the code
 
 To start using the audio captioning DCASE 2020 baseline system, firstly you
@@ -86,6 +117,8 @@ $ pip install -r requirements_pip.txt
 
 The above command will install the required packages using pip. Now you are ready to go
 to the following steps. 
+
+----
 
 ## Preparing the data
 
@@ -145,8 +178,9 @@ directory:
      |   |- clotho_captions_evaluation.csv 
  
 
-Now, you can use the baseline system to extract the features and create the dataset. 
+Now, you can use the baseline system to extract the features and create the dataset.
 
+----
 
 ## Use the baseline system
 
@@ -226,6 +260,8 @@ pre-trained weights are freely available online at Zenodo
 
 ### Evaluate predictions
 
+**Note bold:** To use the caption evaluate tools you need to have Java installed and enabled. 
+
 To evaluate the predictions, you have first to have a optimized (i.e. trained) model (i.e. a DNN). 
 You can obtain this DNN directly from training process (i.e. you do first training and then
 evaluation) or you can use some pre-trained weights. 
@@ -236,7 +272,9 @@ model (at the `settings/model_baseline.yaml` file) and indicate that you want to
 of the DNN (at the `settings/method_baseline.yaml` file). 
 
 **Please note bold:** Before being able to run the code for the evaluation of the predictions, 
-you have first to run the script `get_stanford_models.sh` in the `coco_caption` directory. 
+you have first to run the script `get_stanford_models.sh` in the `coco_caption` directory.
+
+---- 
 
 ## Explanation of settings 
 
