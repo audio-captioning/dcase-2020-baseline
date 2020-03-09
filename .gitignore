@@ -4,7 +4,6 @@ data/*
 !data/.dummy
 outputs/*
 !outputs/.dummy
-coco_caption/pycocoevalcap/spice/cache/*
 
 # Created by .ignore support plugin (hsz.mobi)
 ### JetBrains template
