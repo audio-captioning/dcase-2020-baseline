@@ -35,7 +35,7 @@ def get_argument_parser():
         [['--verbose', '-v'],
          {'default': True,
           'action': 'store_true',
-          'help': 'Be verbose flag (default False).'}]]
+          'help': 'Be verbose flag (default True).'}]]
 
     [arg_parser.add_argument(*i[0], **i[1]) for i in the_args]
 
