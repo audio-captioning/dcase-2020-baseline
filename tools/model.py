@@ -37,7 +37,8 @@ def get_device(force_cpu: bool) \
 
 def get_model(settings_model: MutableMapping[str, Union[str, MutableMapping]],
               settings_io: MutableMapping[str, Union[str, MutableMapping]],
-              output_classes: int) \
+              output_classes: int,
+              device: str) \
         -> Module:
     """Creates and returns the model for the process.
 
@@ -47,6 +48,8 @@ def get_model(settings_model: MutableMapping[str, Union[str, MutableMapping]],
     :type settings_io: dict
     :param output_classes: Amount of output classes.
     :type output_classes: int
+    :param device: Device to use for the model weights.
+    :type device: str|torch.device
     :return: Model.
     :rtype: torch.nn.Module
     """
@@ -63,7 +66,7 @@ def get_model(settings_model: MutableMapping[str, Union[str, MutableMapping]],
             settings_io['root_dirs']['outputs'],
             settings_io['model']['model_dir'],
             settings_io['model']['pre_trained_model_name']
-        )))
+        ), map_location=device))
 
     return model
 

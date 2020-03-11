@@ -413,7 +413,8 @@ def method(settings: MutableMapping[str, Any]) \
         model = get_model(
             settings_model=settings['dnn_training_settings']['model'],
             settings_io=settings['dirs_and_files'],
-            output_classes=len(indices_list))
+            output_classes=len(indices_list),
+            device=device)
         model.to(device)
         logger_inner.info('Done\n')
 
@@ -442,7 +443,8 @@ def method(settings: MutableMapping[str, Any]) \
             model = get_model(
                 settings_model=settings['dnn_training_settings']['model'],
                 settings_io=settings['dirs_and_files'],
-                output_classes=len(indices_list))
+                output_classes=len(indices_list),
+                device=device)
             model.to(device)
             logger_inner.info('Model ready')
 
