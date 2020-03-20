@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#No!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 from pathlib import Path
@@ -170,7 +170,7 @@ def _do_evaluation(model: Module,
         evaluation_outputs[1],
         evaluation_outputs[2],
         indices_object=indices_list,
-        file_names=list(data_path_evaluation.iterdir()),
+        file_names=sorted(list(data_path_evaluation.iterdir())),
         eos_token='<eos>',
         print_to_console=False)
 
