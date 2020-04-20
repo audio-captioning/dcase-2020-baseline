@@ -315,6 +315,7 @@ def _do_training(model: Module,
             logger_main.info('No lower training loss for '
                              f'{patience_counter} epochs. '
                              'Training stops.')
+            break
 
     # Inform that we are done
     logger_main.info('Training done')
