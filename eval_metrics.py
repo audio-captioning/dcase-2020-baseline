@@ -4,6 +4,8 @@ from pathlib import Path
 import json
 import csv
 from typing import Dict, List, Union, Tuple, Any
+import random
+from datetime import datetime
 
 from coco_caption.pycocotools.coco import COCO
 from coco_caption.pycocoevalcap.eval import COCOEvalCap
@@ -152,8 +154,10 @@ def evaluate_metrics_from_lists(predictions: List[str],
     if not tmp_dir.is_dir():
         tmp_dir.mkdir()
 
-    ref_file = tmp_dir.joinpath('ref.json')
-    pred_file = tmp_dir.joinpath('pred.json')
+    unique_id = f'{random.randint(0, 1e6)}_{datetime.now()}'
+
+    ref_file = tmp_dir.joinpath(f'{unique_id}_ref.json')
+    pred_file = tmp_dir.joinpath(f'{unique_id}_pred.json')
 
     write_json(ref, ref_file)
     write_json(pred, pred_file)
