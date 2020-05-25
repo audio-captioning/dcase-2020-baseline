@@ -122,6 +122,63 @@ def _decode_outputs(predicted_outputs: MutableSequence[Tensor],
     return captions_pred, captions_gt
 
 
+def _do_testing(model: Module,
+                settings_data:  MutableMapping[str, Any],
+                settings_io:  MutableMapping[str, Any],
+                indices_list: MutableSequence[str]) \
+        -> None:
+    """Evaluation of an optimized model.
+
+    :param model: Model to use.
+    :type model: torch.nn.Module
+    :param settings_data: Data settings to use.
+    :type settings_data: dict
+    :param indices_list: Sequence with the words of the captions.
+    :type indices_list: list[str]
+    """
+    model.eval()
+    logger_main = logger.bind(is_caption=False, indent=1)
+
+    data_path_test = Path(
+        settings_io['root_dirs']['data'],
+        settings_io['dataset']['features_dirs']['output'],
+        settings_io['dataset']['features_dirs']['test'])
+
+    logger_main.info('Getting test data')
+    test_data = get_clotho_loader(
+        settings_io['dataset']['features_dirs']['test'],
+        is_training=False,
+        settings_data=settings_data,
+        settings_io=settings_io)
+    logger_main.info('Done')
+
+    text_sep = '-' * 100
+    starting_text = 'Starting testing on test data'
+
+    logger_main.info(starting_text)
+    logger.bind(is_caption=True, indent=0).info(
+        f'{text_sep}\n{text_sep}\n{text_sep}\n\n')
+    logger.bind(is_caption=True, indent=0).info(
+        f'{starting_text}.\n\n')
+
+    with no_grad():
+        test_outputs = module_epoch_passing(
+            data=test_data, module=model,
+            objective=None, optimizer=None)
+
+    captions_pred, _ = _decode_outputs(
+        test_outputs[1],
+        test_outputs[2],
+        indices_object=indices_list,
+        file_names=list(data_path_test.iterdir()),
+        eos_token='<eos>',
+        print_to_console=False)
+
+
+
+    logger_main.info('Testing done')
+
+
 def _do_evaluation(model: Module,
                    settings_data:  MutableMapping[str, Any],
                    settings_io:  MutableMapping[str, Any],
@@ -455,6 +512,30 @@ def method(settings: MutableMapping[str, Any]) \
             settings_io=settings['dirs_and_files'],
             indices_list=indices_list)
         logger_inner.info('Evaluation done')
+
+    if settings['workflow']['dnn_testing']:
+        logger_main.info('Doing testing')
+        if model is None:
+            if not settings['dnn_training_settings']['model']['use_pre_trained_model']:
+                raise AttributeError('Mode is not set to train, but'
+                                     'is specified not to use a pre-trained model.')
+
+            logger_inner.info('Setting up model')
+            model = get_model(
+                settings_model=settings['dnn_training_settings']['model'],
+                settings_io=settings['dirs_and_files'],
+                output_classes=len(indices_list),
+                device=device)
+            model.to(device)
+            logger_inner.info('Model ready')
+
+        logger_inner.info('Starting testing')
+        _do_testing(
+            model=model,
+            settings_data=settings['dnn_training_settings']['data'],
+            settings_io=settings['dirs_and_files'],
+            indices_list=indices_list)
+        logger_inner.info('Testing done')
 
 
 def main():
