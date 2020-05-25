@@ -49,8 +49,27 @@ def main():
         logger_inner.info('Features extracted')
         logger_main.info('Creation of dataset ended')
 
+    if settings['workflow']['dnn_testing']:
+        # Create test dataset if not yet created
+        test_split_feat_dir = Path(settings['dirs_and_files']['root_dirs']['data']) \
+            .joinpath(settings['dirs_and_files']['dataset']['features_dirs']['output'],
+                      settings['dirs_and_files']['dataset']['features_dirs']['test'])
+        if not test_split_feat_dir.exists():
+            logger_main.info('Starting creation of test dataset')
+            logger_inner.info('Extracting features')
+            dataset.extract_features_test(
+                root_dir=settings['dirs_and_files']['root_dirs']['data'],
+                settings_data=settings['dirs_and_files']['dataset'],
+                settings_features=settings['feature_extraction_settings'],
+                settings_audio=settings['dataset_creation_settings']['audio'])
+            logger_inner.info('Features extracted')
+            logger_main.info('Creation of test dataset ended')
+        else:
+            logger_inner.info('Found existing test data')
+
     if settings['workflow']['dnn_training'] or \
-            settings['workflow']['dnn_evaluation']:
+            settings['workflow']['dnn_evaluation'] or \
+            settings['workflow']['dnn_testing']:
         method.method(settings)
 
 

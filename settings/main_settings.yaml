@@ -6,9 +6,11 @@
 # affiliation: Tampere University
 # =================================
 workflow:
-  dataset_creation: Yes
-  dnn_training: Yes
-  dnn_evaluation: Yes
+  dataset_creation: No
+  dnn_training: No
+  dnn_evaluation: No
+  dnn_testing: Yes
+
 # ---------------------------------
 dataset_creation_settings: !include dataset_creation.yaml
 # -----------------------------------
