@@ -16,7 +16,7 @@ from tools.dataset_creation import get_annotations_files, \
     get_amount_of_file_in_dir, check_data_for_split, \
     create_split_data, create_lists_and_frequencies
 from tools.file_io import load_settings_file, load_yaml_file, \
-    load_numpy_object, dump_numpy_object
+    load_pickle_file, load_numpy_object, dump_numpy_object, load_audio_file
 from tools.features_log_mel_bands import feature_extraction
 
 __author__ = 'Konstantinos Drossos -- Tampere University'
@@ -143,7 +143,7 @@ def create_dataset(settings_dataset: MutableMapping[str, Any],
 
 def extract_features(root_dir: str,
                      settings_data: MutableMapping[str, Any],
-                     settings_features: MutableMapping[str, Any])\
+                     settings_features: MutableMapping[str, Any]) \
         -> None:
     """Extracts features from the audio data of Clotho.
 
@@ -191,13 +191,13 @@ def extract_features(root_dir: str,
             **settings_features['process'])
 
         # Populate the recarray data and dtypes.
-        array_data = (data_file['file_name'].item(), )
+        array_data = (data_file['file_name'].item(),)
         dtypes = [('file_name', data_file['file_name'].dtype)]
 
         # Check if we keeping the raw audio data.
         if settings_features['keep_raw_audio_data']:
             # And add them to the recarray data and dtypes.
-            array_data += (data_file['audio_data'].item(), )
+            array_data += (data_file['audio_data'].item(),)
             dtypes.append(('audio_data', data_file['audio_data'].dtype))
 
         # Add the rest to the recarray.
@@ -229,8 +229,90 @@ def extract_features(root_dir: str,
         dump_numpy_object(np_rec_array, file_path)
 
 
-def main():
+def extract_features_test(root_dir: str,
+                          settings_data: MutableMapping[str, Any],
+                          settings_features: MutableMapping[str, Any],
+                          settings_audio: MutableMapping[str, Any]) \
+        -> None:
+    """Extracts test features from the audio data of Clotho.
 
+    :param root_dir: Root dir for the data.
+    :type root_dir: str
+    :param settings_data: Settings for creating data files.
+    :type settings_data: dict[str, T]
+    :param settings_features: Settings for feature extraction.
+    :type settings_features: dict[str, T]
+    :param settings_audio: Settings for the audio.
+    :type settings_audio: dict
+    """
+    # Get the root directory.
+    dir_root = Path(root_dir)
+
+    # Get the directories of files.
+    dir_test = dir_root.joinpath(
+        settings_data['audio_dirs']['downloaded'],
+        settings_data['audio_dirs']['test'])
+
+    # Get the directories for output.
+    dir_output_test = dir_root.joinpath(
+        settings_data['features_dirs']['output'],
+        settings_data['features_dirs']['test'])
+
+    words_list = load_pickle_file(
+        dir_root.joinpath(
+            settings_data['pickle_files_dir'],
+            settings_data['files']['words_list_file_name']))
+
+    # Create the directories.
+    dir_output_test.mkdir(parents=True, exist_ok=True)
+
+    # Apply the function to each file and save the result.
+    for data_file_name in filter(
+            lambda _x: _x.is_file(),
+            dir_test.iterdir()):
+        # Load the audio
+        audio = load_audio_file(
+            audio_file=str(data_file_name),
+            sr=int(settings_audio['sr']),
+            mono=settings_audio['to_mono'])
+
+        # Extract the features.
+        features = feature_extraction(
+            audio,
+            **settings_features['process'])
+
+        # Populate the recarray data and dtypes.
+        array_data = (data_file_name.name,)
+        dtypes = [('file_name', f'U{len(data_file_name.name)}')]
+
+        # Check if we keeping the raw audio data.
+        if settings_features['keep_raw_audio_data']:
+            # And add them to the recarray data and dtypes.
+            array_data += (audio,)
+            dtypes.append(('audio_data', audio.dtype))
+
+        # Add the rest to the recarray.
+        # Word indices are required for the dataloader to work
+        array_data += (features,
+                       np.array([words_list.index('<sos>'), words_list.index('<eos>')]))
+        dtypes.extend([
+            ('features', np.dtype(object)),
+            ('words_ind', np.dtype(object))])
+
+        # Make the recarray
+        np_rec_array = np.rec.array([array_data], dtype=dtypes)
+
+        # Make the path for serializing the recarray.
+        parent_path = dir_output_test
+
+        file_template = settings_data['files']['np_file_name_template'].replace('_{caption_index}', '')
+        file_path = parent_path.joinpath(file_template.format(audio_file_name=data_file_name.name))
+
+        # Dump it.
+        dump_numpy_object(np_rec_array, file_path)
+
+
+def main():
     args = get_argument_parser().parse_args()
 
     file_dir = args.file_dir
