@@ -40,4 +40,8 @@ model:
 logging:
   logger_dir: 'logging'
   caption_logger_file: 'captions_baseline.txt'
+# -----------------------------------
+submissions:
+  submissions_dir: 'submissions'
+  submission_file: 'caption_predictions.csv'
 # EOF
