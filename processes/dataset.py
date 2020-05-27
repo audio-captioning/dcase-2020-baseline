@@ -253,6 +253,13 @@ def extract_features_test(root_dir: str,
         settings_data['audio_dirs']['downloaded'],
         settings_data['audio_dirs']['test'])
 
+    audio_exists = False
+    if dir_test.exists() and len(list(dir_test.iterdir())) != 0:
+        audio_exists = True
+    if not audio_exists:
+        raise AttributeError('Testing workflow selected, but could not find the test set audio files. '
+                             'Please download the test set audio before making test predictions.')
+
     # Get the directories for output.
     dir_output_test = dir_root.joinpath(
         settings_data['features_dirs']['output'],

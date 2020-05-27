@@ -14,7 +14,7 @@ from torch.optim import Adam
 from torch.nn.functional import softmax
 from loguru import logger
 
-from tools import file_io, printing
+from tools import file_io, printing, csv_functions
 from tools.argument_parsing import get_argument_parser
 from tools.model import module_epoch_passing, get_model,\
     get_device
@@ -174,7 +174,21 @@ def _do_testing(model: Module,
         eos_token='<eos>',
         print_to_console=False)
 
+    # clotho_file_{file_name} to {file_name}.wav
+    for i, entry in enumerate(captions_pred):
+        entry['file_name'] = entry['file_name']\
+            .replace('clotho_file_', '') + '.wav'
+        captions_pred[i] = entry
 
+    submission_dir = Path().joinpath(
+        settings_io['root_dirs']['outputs'],
+        settings_io['submissions']['submissions_dir'])
+    submission_dir.mkdir(parents=True, exist_ok=True)
+    csv_functions.write_csv_file(
+        captions_pred,
+        settings_io['submissions']['submission_file'],
+        submission_dir,
+        add_timestamp=True)
 
     logger_main.info('Testing done')
 
