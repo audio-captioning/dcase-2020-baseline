@@ -241,7 +241,7 @@ def _do_evaluation(model: Module,
         evaluation_outputs[1],
         evaluation_outputs[2],
         indices_object=indices_list,
-        file_names=list(data_path_evaluation.iterdir()),
+        file_names=sorted(list(data_path_evaluation.iterdir())),
         eos_token='<eos>',
         print_to_console=False)
 
@@ -386,6 +386,7 @@ def _do_training(model: Module,
             logger_main.info('No lower training loss for '
                              f'{patience_counter} epochs. '
                              'Training stops.')
+            break
 
     # Inform that we are done
     logger_main.info('Training done')
