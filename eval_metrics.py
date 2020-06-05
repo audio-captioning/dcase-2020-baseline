@@ -154,7 +154,7 @@ def evaluate_metrics_from_lists(predictions: List[str],
     if not tmp_dir.is_dir():
         tmp_dir.mkdir()
 
-    unique_id = f'{random.randint(0, 1e6)}_{datetime.now()}'
+    unique_id = f'{random.randint(0, 1e6)}_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S_%f")}'
 
     ref_file = tmp_dir.joinpath(f'{unique_id}_ref.json')
     pred_file = tmp_dir.joinpath(f'{unique_id}_pred.json')
