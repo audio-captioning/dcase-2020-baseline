@@ -124,11 +124,13 @@ def module_epoch_passing(data: DataLoader,
 
             if has_optimizer:
                 optimizer.zero_grad()
+                loss.backward()
+                
                 if grad_norm_val > -1:
                     clip_grad_norm_(module.parameters(),
                                     max_norm=grad_norm_val,
                                     norm_type=grad_norm)
-                loss.backward()
+                    
                 optimizer.step()
 
             objective_output[i] = loss.cpu().item()
