@@ -10,6 +10,7 @@ workflow:
 # -----------------------------------
 annotations:
   development_file: 'clotho_captions_development.csv'
+  validation_file: 'clotho_captions_validation.csv'
   evaluation_file: 'clotho_captions_evaluation.csv'
   audio_file_column: 'file_name'
   captions_fields_prefix: 'caption_{}'
