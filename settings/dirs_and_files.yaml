@@ -10,17 +10,20 @@ root_dirs:
 # -----------------------------------
 dataset:
   development: &dev 'development'
+  validation: &val 'validation'
   evaluation: &eva 'evaluation'
   test: &test 'test'
   features_dirs:
     output: 'data_splits'
     development: *dev
+    validation: *val
     evaluation: *eva
     test: *test
   audio_dirs:
     downloaded: 'clotho_audio_files'
     output: 'data_splits_audio'
     development: *dev
+    validation: *val
     evaluation: *eva
     test: *test
   annotations_dir: 'clotho_csv_files'
